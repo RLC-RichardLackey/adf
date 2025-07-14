@@ -1,0 +1,23 @@
+{
+	"name": "Recon",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"server": "rltraining.database.windows.net",
+			"database": "recon",
+			"encrypt": "mandatory",
+			"trustServerCertificate": false,
+			"authenticationType": "SQL",
+			"userName": "ralackey305",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "AzureKeyVault1",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "RLTrain-Azure-Recon"
+			}
+		}
+	}
+}

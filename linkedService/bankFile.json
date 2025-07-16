@@ -2,7 +2,7 @@
 	"name": "bankFile",
 	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
-		"description": "Frost bank file source",
+		"description": "Frost bank file source ",
 		"annotations": [],
 		"type": "AzureBlobStorage",
 		"typeProperties": {

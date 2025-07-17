@@ -22,7 +22,11 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"Container": "rlstore",
-							"Directory": "BankFile"
+							"Directory": "BankFile",
+							"filename": {
+								"value": "@item.name()",
+								"type": "Expression"
+							}
 						}
 					},
 					"fieldList": [

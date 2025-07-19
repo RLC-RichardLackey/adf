@@ -189,8 +189,6 @@
 				"name": "FilterFiles",
 				"description": "Only files will be selected, the source-folders will not be selected.",
 				"type": "Filter",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "GetFileList",
@@ -212,6 +210,24 @@
 				}
 			}
 		],
+		"parameters": {
+			"SourceStore_Location": {
+				"type": "string",
+				"defaultValue": "source"
+			},
+			"SourceStore_Directory": {
+				"type": "string",
+				"defaultValue": "/"
+			},
+			"DestinationStore_Location": {
+				"type": "string",
+				"defaultValue": "archive"
+			},
+			"DestinationStore_Directory": {
+				"type": "string",
+				"defaultValue": "/"
+			}
+		},
 		"variables": {
 			"fn": {
 				"type": "String"

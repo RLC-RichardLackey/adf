@@ -18,7 +18,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "BinaryDataSource_File",
+						"referenceName": "BinaryDataSource_Folder",
 						"type": "DatasetReference",
 						"parameters": {
 							"Container": {

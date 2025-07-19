@@ -212,24 +212,6 @@
 				}
 			}
 		],
-		"parameters": {
-			"SourceStore_Location": {
-				"type": "String",
-				"defaultValue": "rlstore"
-			},
-			"SourceStore_Directory": {
-				"type": "String",
-				"defaultValue": "BankFile"
-			},
-			"DestinationStore_Location": {
-				"type": "String",
-				"defaultValue": "rlstore"
-			},
-			"DestinationStore_Directory": {
-				"type": "String",
-				"defaultValue": "Archive"
-			}
-		},
 		"variables": {
 			"fn": {
 				"type": "String"

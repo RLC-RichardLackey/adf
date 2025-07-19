@@ -199,10 +199,17 @@
 										}
 									}
 								},
-								"enableLogging": false,
+								"logStorageSettings": {
+									"linkedServiceName": {
+										"referenceName": "Source",
+										"type": "LinkedServiceReference"
+									},
+									"path": "source"
+								},
+								"enableLogging": true,
 								"storeSettings": {
 									"type": "AzureBlobStorageReadSettings",
-									"recursive": true
+									"recursive": false
 								}
 							}
 						}

@@ -189,6 +189,8 @@
 				"name": "FilterFiles",
 				"description": "Only files will be selected, the source-folders will not be selected.",
 				"type": "Filter",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "GetFileList",

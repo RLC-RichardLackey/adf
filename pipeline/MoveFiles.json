@@ -96,6 +96,27 @@
 									}
 								},
 								"enableStaging": false,
+								"preserve": [
+									"Attributes"
+								],
+								"skipErrorFile": {
+									"dataInconsistency": false
+								},
+								"validateDataConsistency": true,
+								"logSettings": {
+									"enableCopyActivityLog": true,
+									"copyActivityLogSettings": {
+										"logLevel": "Info",
+										"enableReliableLogging": false
+									},
+									"logLocationSettings": {
+										"linkedServiceName": {
+											"referenceName": "Source",
+											"type": "LinkedServiceReference"
+										},
+										"path": "source"
+									}
+								},
 								"dataIntegrationUnits": 0
 							},
 							"inputs": [
@@ -220,7 +241,7 @@
 			},
 			"SourceStore_Directory": {
 				"type": "string",
-				"defaultValue": "/"
+				"defaultValue": "bankfiles"
 			},
 			"DestinationStore_Location": {
 				"type": "string",

@@ -1,0 +1,11 @@
+{
+	"name": "ds_source",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobStorage",
+		"typeProperties": {
+			"serviceEndpoint": "https://sqlserverstor.blob.core.windows.net/",
+			"accountKind": "StorageV2"
+		}
+	}
+}

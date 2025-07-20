@@ -259,7 +259,7 @@
 			},
 			"SourceStore_Directory": {
 				"type": "string",
-				"defaultValue": "bankfiles"
+				"defaultValue": "testfiles"
 			},
 			"DestinationStore_Location": {
 				"type": "string",

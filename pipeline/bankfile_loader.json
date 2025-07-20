@@ -227,7 +227,7 @@
 											}
 										],
 										"type": "Query",
-										"text": "EXEC stage.p_insert_Stage_FileMaster @filename = @scrfilename\n                                     @filemaster_id = @scrfilmaster_id OUTPUT -- int\n"
+										"text": "EXEC stage.p_insert_Stage_FileMaster @filename = @scrfilename,\n                                     @filemaster_id = @scrfilmaster_id OUTPUT -- int\n"
 									}
 								],
 								"scriptBlockExecutionTimeout": "02:00:00"

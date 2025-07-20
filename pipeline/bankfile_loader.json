@@ -188,7 +188,7 @@
 									},
 									"filename": {
 										"value": {
-											"value": "item.name()",
+											"value": "@activity('GetFileList').output.itemName",
 											"type": "Expression"
 										},
 										"type": "String"

@@ -161,9 +161,8 @@
 							]
 						},
 						{
-							"name": "DeleteAFile",
-							"description": "Delete a file from the source store",
-							"type": "Delete",
+							"name": "insert RawFileMaster",
+							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
 									"activity": "CopyAFile",
@@ -173,7 +172,39 @@
 								}
 							],
 							"policy": {
-								"timeout": "7.00:00:00",
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": true,
+								"secureInput": false
+							},
+							"typeProperties": {
+								"storedProcedureName": "[STAGE].[p_insert_Stage_FileMaster]",
+								"storedProcedureParameters": {
+									"@filename": {
+										"value": {
+											"value": "@item().name",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"@id": {
+										"value": "",
+										"type": "Int32"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "Recon",
+								"type": "LinkedServiceReference"
+							}
+						},
+						{
+							"name": "Lookup1",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
 								"retry": 0,
 								"retryIntervalInSeconds": 30,
 								"secureOutput": false,
@@ -181,36 +212,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"dataset": {
-									"referenceName": "BinaryDataSource_File",
-									"type": "DatasetReference",
-									"parameters": {
-										"Container": {
-											"value": "@pipeline().parameters.SourceStore_Location",
-											"type": "Expression"
-										},
-										"Directory": {
-											"value": "@pipeline().parameters.SourceStore_Directory",
-											"type": "Expression"
-										},
-										"filename": {
-											"value": "@item().name",
-											"type": "Expression"
-										}
-									}
-								},
-								"logStorageSettings": {
-									"linkedServiceName": {
-										"referenceName": "Source",
-										"type": "LinkedServiceReference"
-									},
-									"path": "source"
-								},
-								"enableLogging": true,
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": false
-								}
+								"firstRowOnly": false
 							}
 						}
 					]

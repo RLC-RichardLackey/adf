@@ -163,8 +163,6 @@
 						{
 							"name": "set_filemaster_id",
 							"type": "SetVariable",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "filemaster",
@@ -181,7 +179,7 @@
 							"typeProperties": {
 								"variableName": "filemaster_id",
 								"value": {
-									"value": "@activity('sp_stage_filemaster').output.outputParameters.filemaster_id",
+									"value": "@activity('filemaster').output.outboundparameters.scrfielmaster_id",
 									"type": "Expression"
 								}
 							}

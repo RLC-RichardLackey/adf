@@ -1,0 +1,97 @@
+{
+	"name": "stage_filemaster",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "azure_recon",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "id",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "raw_filemaster_id",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "Record_Type_Code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Transaction_Code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Receiving_DFI_Identification",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Check_Digit",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DFI_Account_Number",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Amount",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Identification_Number",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Discretionary_Data_Payment_Code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Addenda_Record_Indicator",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Trace_Number",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Company_Descriptive_Date",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Effecive_Date",
+				"type": "nvarchar"
+			},
+			{
+				"name": "create_date",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "txn_date",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "txn_amt",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			}
+		],
+		"typeProperties": {
+			"schema": "STAGE",
+			"table": "Raw_BankFile"
+		}
+	}
+}

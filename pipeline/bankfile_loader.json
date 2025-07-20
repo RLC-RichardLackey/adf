@@ -165,7 +165,7 @@
 							"type": "SetVariable",
 							"dependsOn": [
 								{
-									"activity": "Lookup1",
+									"activity": "sp_stage_filemaster",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -179,14 +179,14 @@
 							"typeProperties": {
 								"variableName": "filemaster_id",
 								"value": {
-									"value": "@activity('Lookup1').output",
+									"value": "@activity('sp_stage_filemaster').output.outputParameters.filemaster_id",
 									"type": "Expression"
 								}
 							}
 						},
 						{
-							"name": "Lookup1",
-							"type": "Lookup",
+							"name": "sp_stage_filemaster",
+							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
 									"activity": "CopyAFile",
@@ -204,29 +204,24 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"source": {
-									"type": "AzureSqlSource",
-									"sqlReaderStoredProcedureName": "[STAGE].[p_insert_Stage_FileMaster]",
-									"storedProcedureParameters": {
-										"filemaster_id": {
-											"type": "Int32",
-											"value": {
-												"value": "@variables('filemaster_id')",
-												"type": "Expression"
-											}
-										},
-										"filename": {
-											"type": "String"
-										}
+								"storedProcedureName": "[STAGE].[p_insert_Stage_FileMaster]",
+								"storedProcedureParameters": {
+									"filemaster_id": {
+										"value": null,
+										"type": "Int32"
 									},
-									"queryTimeout": "02:00:00",
-									"partitionOption": "None"
-								},
-								"dataset": {
-									"referenceName": "stage_filemaster",
-									"type": "DatasetReference"
-								},
-								"firstRowOnly": false
+									"filename": {
+										"value": {
+											"value": "@item().name",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "azure_recon",
+								"type": "LinkedServiceReference"
 							}
 						}
 					]

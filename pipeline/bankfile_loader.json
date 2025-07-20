@@ -161,8 +161,8 @@
 							]
 						},
 						{
-							"name": "Lookup1",
-							"type": "Lookup",
+							"name": "stage_filemaster",
+							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
 									"activity": "CopyAFile",
@@ -178,31 +178,50 @@
 								"secureOutput": false,
 								"secureInput": false
 							},
+							"userProperties": [],
 							"typeProperties": {
-								"source": {
-									"type": "AzureSqlSource",
-									"sqlReaderStoredProcedureName": "[STAGE].[p_insert_Stage_FileMaster]",
-									"storedProcedureParameters": {
-										"filename": {
-											"type": "String",
-											"value": {
-												"value": "item.name()",
-												"type": "Expression"
-											}
-										},
-										"filemaster_id": {
-											"type": "Int32",
-											"value": null
-										}
+								"storedProcedureName": "[STAGE].[p_insert_Stage_FileMaster]",
+								"storedProcedureParameters": {
+									"filemaster_id": {
+										"value": "",
+										"type": "Int32"
 									},
-									"queryTimeout": "02:00:00",
-									"partitionOption": "None"
-								},
-								"dataset": {
-									"referenceName": "stage_filemaster",
-									"type": "DatasetReference"
-								},
-								"firstRowOnly": true
+									"filename": {
+										"value": {
+											"value": "item.name()",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "azure_recon",
+								"type": "LinkedServiceReference"
+							}
+						},
+						{
+							"name": "set_filemaster_id",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "stage_filemaster",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "filemaster_id",
+								"value": {
+									"value": "@activity('stage_filemaster').output.outputParameters.filemaster_id",
+									"type": "Expression"
+								}
 							}
 						}
 					]

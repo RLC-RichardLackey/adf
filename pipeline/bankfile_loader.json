@@ -163,9 +163,11 @@
 						{
 							"name": "set_filemaster_id",
 							"type": "SetVariable",
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
-									"activity": "Lookup1",
+									"activity": "filemaster",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -179,14 +181,14 @@
 							"typeProperties": {
 								"variableName": "filemaster_id",
 								"value": {
-									"value": "@activity('Lookup1').output.outputParameters.filemaster_id",
+									"value": "@activity('sp_stage_filemaster').output.outputParameters.filemaster_id",
 									"type": "Expression"
 								}
 							}
 						},
 						{
-							"name": "Lookup1",
-							"type": "Lookup",
+							"name": "filemaster",
+							"type": "Script",
 							"dependsOn": [
 								{
 									"activity": "CopyAFile",
@@ -203,30 +205,32 @@
 								"secureInput": false
 							},
 							"userProperties": [],
+							"linkedServiceName": {
+								"referenceName": "azure_recon",
+								"type": "LinkedServiceReference"
+							},
 							"typeProperties": {
-								"source": {
-									"type": "AzureSqlSource",
-									"sqlReaderStoredProcedureName": "[STAGE].[p_insert_Stage_FileMaster]",
-									"storedProcedureParameters": {
-										"filemaster_id": {
-											"type": "Int32",
-											"value": null
-										},
-										"filename": {
-											"type": "String",
-											"value": {
-												"value": "@item().name",
-												"type": "Expression"
+								"scripts": [
+									{
+										"parameters": [
+											{
+												"name": "scrfilename",
+												"type": "String",
+												"value": "",
+												"direction": "Input"
+											},
+											{
+												"name": "scrfilmaster_id",
+												"type": "Int32",
+												"value": null,
+												"direction": "Output"
 											}
-										}
-									},
-									"queryTimeout": "02:00:00",
-									"partitionOption": "None"
-								},
-								"dataset": {
-									"referenceName": "stage_filemaster",
-									"type": "DatasetReference"
-								}
+										],
+										"type": "Query",
+										"text": "EXEC stage.p_insert_Stage_FileMaster @filename = @scrfilename\n                                     @filemaster_id = @scrfilmaster_id OUTPUT -- int\n"
+									}
+								],
+								"scriptBlockExecutionTimeout": "02:00:00"
 							}
 						}
 					]

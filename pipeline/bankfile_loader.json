@@ -251,8 +251,9 @@
 			}
 		},
 		"variables": {
-			"fn": {
-				"type": "String"
+			"filemaster_id": {
+				"type": "Integer",
+				"defaultValue": -1
 			}
 		},
 		"annotations": []

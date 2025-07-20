@@ -161,8 +161,32 @@
 							]
 						},
 						{
-							"name": "stage_filemaster",
-							"type": "SqlServerStoredProcedure",
+							"name": "set_filemaster_id",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Lookup1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "filemaster_id",
+								"value": {
+									"value": "@activity('Lookup1').output",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Lookup1",
+							"type": "Lookup",
 							"dependsOn": [
 								{
 									"activity": "CopyAFile",
@@ -180,48 +204,29 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[STAGE].[p_insert_Stage_FileMaster]",
-								"storedProcedureParameters": {
-									"filemaster_id": {
-										"value": null,
-										"type": "Int64"
-									},
-									"filename": {
-										"value": {
-											"value": "@activity('GetFileList').output.itemName",
-											"type": "Expression"
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderStoredProcedureName": "[STAGE].[p_insert_Stage_FileMaster]",
+									"storedProcedureParameters": {
+										"filemaster_id": {
+											"type": "Int32",
+											"value": {
+												"value": "@variables('filemaster_id')",
+												"type": "Expression"
+											}
 										},
-										"type": "String"
-									}
-								}
-							},
-							"linkedServiceName": {
-								"referenceName": "azure_recon",
-								"type": "LinkedServiceReference"
-							}
-						},
-						{
-							"name": "set_filemaster_id",
-							"type": "SetVariable",
-							"dependsOn": [
-								{
-									"activity": "stage_filemaster",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "filemaster_id",
-								"value": {
-									"value": "@activity('stage_filemaster').output.outputParameters.filemaster_id",
-									"type": "Expression"
-								}
+										"filename": {
+											"type": "String"
+										}
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "stage_filemaster",
+									"type": "DatasetReference"
+								},
+								"firstRowOnly": false
 							}
 						}
 					]

@@ -184,7 +184,7 @@
 								"storedProcedureParameters": {
 									"filemaster_id": {
 										"value": "",
-										"type": "Int32"
+										"type": "Int16"
 									},
 									"filename": {
 										"value": {

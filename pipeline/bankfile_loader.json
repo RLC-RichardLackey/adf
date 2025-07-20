@@ -214,7 +214,10 @@
 											{
 												"name": "scrfilename",
 												"type": "String",
-												"value": "",
+												"value": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
 												"direction": "Input"
 											},
 											{

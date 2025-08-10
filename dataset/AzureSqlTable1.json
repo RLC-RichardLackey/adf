@@ -1,0 +1,31 @@
+{
+	"name": "AzureSqlTable1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "azure_recon",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "id",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "raw_filemaster_id",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "datarow",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "STAGE",
+			"table": "blob_BankFile"
+		}
+	}
+}

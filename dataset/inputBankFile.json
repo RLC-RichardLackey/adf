@@ -16,14 +16,9 @@
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
-			"firstRowAsHeader": true,
+			"firstRowAsHeader": false,
 			"quoteChar": "\""
 		},
-		"schema": [
-			{
-				"name": "1011742592641 1140000932507111928T094101BACKER & ROBBINS - JERRFROST BANK                     ",
-				"type": "String"
-			}
-		]
+		"schema": []
 	}
 }

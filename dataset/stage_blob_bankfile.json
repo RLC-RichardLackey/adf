@@ -1,5 +1,5 @@
 {
-	"name": "AzureSqlTable1",
+	"name": "stage_blob_bankfile",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "azure_recon",

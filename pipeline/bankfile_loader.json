@@ -172,7 +172,7 @@
 							"type": "SetVariable",
 							"dependsOn": [
 								{
-									"activity": "filemaster",
+									"activity": "GetNewFileMaster_ID",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -186,13 +186,13 @@
 							"typeProperties": {
 								"variableName": "filemaster_id",
 								"value": {
-									"value": "@activity('filemaster').output.outputparameters.scrfilemaster_id",
+									"value": "@activity('GetNewFileMaster_ID').output.outputparameters.scrfilemaster_id",
 									"type": "Expression"
 								}
 							}
 						},
 						{
-							"name": "filemaster",
+							"name": "GetNewFileMaster_ID",
 							"type": "Script",
 							"dependsOn": [],
 							"policy": {

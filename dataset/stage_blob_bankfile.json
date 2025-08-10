@@ -5,6 +5,12 @@
 			"referenceName": "azure_recon",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"p_filemaster_id": {
+				"type": "int",
+				"defaultValue": 0
+			}
+		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": [

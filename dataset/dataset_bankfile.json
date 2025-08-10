@@ -1,0 +1,24 @@
+{
+	"name": "dataset_bankfile",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Source",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "20250711232250_PP_ACHITEMS_ENTK2823.DAT",
+				"folderPath": "testbankfiles",
+				"container": "source"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": false,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}

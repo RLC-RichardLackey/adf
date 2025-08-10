@@ -1,0 +1,28 @@
+{
+	"name": "dataflowBankFile",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "inputBankFile",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          {1011742592641 1140000932507111928T094101BACKER & ROBBINS - JERRFROST BANK                     } as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     moveFiles: ['/testbankfiles','testbankfiles/archive']) ~> source1"
+			]
+		}
+	}
+}

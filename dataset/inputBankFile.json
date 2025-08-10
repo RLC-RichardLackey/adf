@@ -1,0 +1,29 @@
+{
+	"name": "inputBankFile",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Source",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "20250711232250_PP_ACHITEMS_ENTK2823.DAT",
+				"folderPath": "testbankfiles",
+				"container": "source"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "1011742592641 1140000932507111928T094101BACKER & ROBBINS - JERRFROST BANK                     ",
+				"type": "String"
+			}
+		]
+	}
+}

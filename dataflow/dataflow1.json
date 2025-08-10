@@ -23,6 +23,9 @@
 			],
 			"transformations": [],
 			"scriptLines": [
+				"parameters{",
+				"     p_filemaster_id as integer (0)",
+				"}",
 				"source(output(",
 				"          Column_1 as string",
 				"     ),",

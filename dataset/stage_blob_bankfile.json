@@ -69,6 +69,10 @@
 			{
 				"name": "Company_Descriptive_Date",
 				"type": "nvarchar"
+			},
+			{
+				"name": "Effective_Date",
+				"type": "nvarchar"
 			}
 		],
 		"typeProperties": {

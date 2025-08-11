@@ -51,7 +51,8 @@
 				"     format: 'table',",
 				"     errorHandlingOption: 'stopOnFirstError',",
 				"     mapColumn(",
-				"          raw_filemaster_id = Column_1",
+				"          raw_filemaster_id = fmid,",
+				"          datarow = Column_1",
 				"     )) ~> sink1"
 			]
 		}

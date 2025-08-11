@@ -354,7 +354,8 @@
 				"defaultValue": "archive"
 			},
 			"DestinationStore_Directory": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "/"
 			}
 		},
 		"variables": {

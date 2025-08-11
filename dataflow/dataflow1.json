@@ -24,6 +24,12 @@
 			"transformations": [
 				{
 					"name": "derivedColumn1"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "filter1"
 				}
 			],
 			"scriptLines": [
@@ -42,7 +48,17 @@
 				"source1 derive(fmid = $p_filemaster_id,",
 				"          RecordTypeCode = substring(Column_1,1,1),",
 				"          TransactionCode = substring(Column_1,2,2)) ~> derivedColumn1",
-				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"filter1 select(mapColumn(",
+				"          Column_1,",
+				"          fmid,",
+				"          RecordTypeCode,",
+				"          TransactionCode",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"derivedColumn1 filter(RecordTypeCode == \"1\" || RecordTypeCode == \"5\" || RecordTypeCode == \"6\"\r",
+				") ~> filter1",
+				"select1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          id as long,",

@@ -28,7 +28,10 @@
 			],
 			"scriptLines": [
 				"parameters{",
-				"     p_filemaster_id as integer (0)",
+				"     p_filemaster_id as integer (0),",
+				"     p_container as string,",
+				"     p_directory as string,",
+				"     p_filename as string",
 				"}",
 				"source(output(",
 				"          Column_1 as string",

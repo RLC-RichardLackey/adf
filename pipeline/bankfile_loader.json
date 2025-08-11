@@ -232,6 +232,8 @@
 						{
 							"name": "Delete1",
 							"type": "Delete",
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "CopyAFile",
@@ -302,6 +304,25 @@
 										"p_filemaster_id": {
 											"value": "@variables('filemaster_id') ",
 											"type": "Expression"
+										},
+										"p_container": {
+											"value": "'@{pipeline().parameters.SourceStore_Location}'",
+											"type": "Expression"
+										},
+										"p_directory": {
+											"value": "'@{pipeline().parameters.SourceStore_Directory}'",
+											"type": "Expression"
+										},
+										"p_filename": {
+											"value": "'@{item().name}'",
+											"type": "Expression"
+										}
+									},
+									"linkedServiceParameters": {
+										"source1": {
+											"schemaLinkedService": {
+												"p_filemaster_id": 0
+											}
 										}
 									}
 								},
@@ -347,7 +368,7 @@
 			},
 			"SourceStore_Directory": {
 				"type": "string",
-				"defaultValue": "testfiles"
+				"defaultValue": "testbankfiles"
 			},
 			"DestinationStore_Location": {
 				"type": "string",

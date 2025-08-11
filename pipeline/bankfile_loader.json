@@ -317,13 +317,6 @@
 											"value": "'@{item().name}'",
 											"type": "Expression"
 										}
-									},
-									"linkedServiceParameters": {
-										"source1": {
-											"schemaLinkedService": {
-												"p_filemaster_id": 0
-											}
-										}
 									}
 								},
 								"compute": {

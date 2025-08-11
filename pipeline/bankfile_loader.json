@@ -357,6 +357,7 @@
 				}
 			}
 		],
+		"concurrency": 1,
 		"parameters": {
 			"SourceStore_Location": {
 				"type": "string",

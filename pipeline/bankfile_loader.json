@@ -320,6 +320,14 @@
 											"value": "'@{item().name}'",
 											"type": "Expression"
 										}
+									},
+									"datasetParameters": {
+										"source1": {
+											"p_filemaster_id": 0,
+											"p_container": "source",
+											"p_directory": "testbankfiles",
+											"p_filename": "20250711232250_PP_ACHITEMS_ENTK2823.DAT"
+										}
 									}
 								},
 								"compute": {

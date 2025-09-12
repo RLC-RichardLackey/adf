@@ -1,0 +1,55 @@
+{
+	"name": "inputBankFile_copy1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Source",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"p_filemaster_id": {
+				"type": "int",
+				"defaultValue": 0
+			},
+			"p_container": {
+				"type": "string",
+				"defaultValue": "source"
+			},
+			"p_directory": {
+				"type": "string",
+				"defaultValue": "testbankfiles"
+			},
+			"p_filename": {
+				"type": "string",
+				"defaultValue": "20250711232250_PP_ACHITEMS_ENTK2823.DAT"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().p_filename",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().p_directory",
+					"type": "Expression"
+				},
+				"container": {
+					"value": "@dataset().p_container",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": "",
+			"escapeChar": "\\",
+			"firstRowAsHeader": false,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"type": "String"
+			}
+		]
+	}
+}

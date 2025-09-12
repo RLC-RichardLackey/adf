@@ -354,14 +354,14 @@
 							"userProperties": [],
 							"typeProperties": {
 								"source": {
-									"type": "BinarySource",
+									"type": "DelimitedTextSource",
 									"storeSettings": {
 										"type": "AzureBlobStorageReadSettings",
 										"recursive": true,
-										"deleteFilesAfterCompletion": false
+										"enablePartitionDiscovery": false
 									},
 									"formatSettings": {
-										"type": "BinaryReadSettings"
+										"type": "DelimitedTextReadSettings"
 									}
 								},
 								"sink": {
@@ -369,23 +369,35 @@
 									"writeBehavior": "insert",
 									"sqlWriterUseTableLock": false
 								},
-								"enableStaging": false
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
 							},
 							"inputs": [
 								{
-									"referenceName": "BinaryDataSource_File",
+									"referenceName": "inputBankFile",
 									"type": "DatasetReference",
 									"parameters": {
-										"Container": {
+										"p_filemaster_id": {
+											"value": "@variables('filemaster_id')",
+											"type": "Expression"
+										},
+										"p_container": {
 											"value": "@pipeline().parameters.SourceStore_Location",
 											"type": "Expression"
 										},
-										"Directory": {
+										"p_directory": {
 											"value": "@pipeline().parameters.SourceStore_Directory",
 											"type": "Expression"
 										},
-										"filename": {
-											"value": "@item().name",
+										"p_filename": {
+											"value": "@item().name    ",
 											"type": "Expression"
 										}
 									}

@@ -1,0 +1,83 @@
+{
+	"name": "stage_blob_raw_data",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "azure_recon",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "id",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "raw_filemaster_id",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "datarow",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Record_Type_Code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Transaction_Code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Receiving_DFI_Identification",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Check_Digit",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DFI_Account_Number",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Amount",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Identification_Number",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Discretionary_Data_Payment_Code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Addenda_Record_Indicator",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Trace_Number",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Company_Descriptive_Date",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Effective_Date",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "STAGE",
+			"table": "raw_data"
+		}
+	}
+}

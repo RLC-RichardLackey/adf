@@ -69,7 +69,7 @@
 							"type": "Copy",
 							"dependsOn": [
 								{
-									"activity": "Data flow1",
+									"activity": "CopyFile_to_Azure",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -99,7 +99,8 @@
 								"sink": {
 									"type": "BinarySink",
 									"storeSettings": {
-										"type": "AzureBlobStorageWriteSettings"
+										"type": "AzureBlobStorageWriteSettings",
+										"copyBehavior": "PreserveHierarchy"
 									}
 								},
 								"enableStaging": false,
@@ -281,16 +282,11 @@
 							}
 						},
 						{
-							"name": "Data flow1",
+							"name": "LoadFile-to-Azure",
 							"type": "ExecuteDataFlow",
-							"dependsOn": [
-								{
-									"activity": "set_filemaster_id",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
+							"dependsOn": [],
 							"policy": {
 								"timeout": "0.12:00:00",
 								"retry": 0,
@@ -336,6 +332,71 @@
 								},
 								"traceLevel": "Fine"
 							}
+						},
+						{
+							"name": "CopyFile_to_Azure",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "set_filemaster_id",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "BinarySource",
+									"storeSettings": {
+										"type": "AzureBlobStorageReadSettings",
+										"recursive": true,
+										"deleteFilesAfterCompletion": false
+									},
+									"formatSettings": {
+										"type": "BinaryReadSettings"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"writeBehavior": "insert",
+									"sqlWriterUseTableLock": false
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "BinaryDataSource_File",
+									"type": "DatasetReference",
+									"parameters": {
+										"Container": {
+											"value": "@pipeline().parameters.SourceStore_Location",
+											"type": "Expression"
+										},
+										"Directory": {
+											"value": "@pipeline().parameters.SourceStore_Directory",
+											"type": "Expression"
+										},
+										"filename": {
+											"value": "@item().name",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "stage_blob_raw_data",
+									"type": "DatasetReference"
+								}
+							]
 						}
 					]
 				}

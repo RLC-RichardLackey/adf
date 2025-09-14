@@ -1,5 +1,5 @@
 {
-	"name": "inputBankFile_copy1",
+	"name": "inputBankFile_Fixed",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "Source",
@@ -41,10 +41,10 @@
 					"type": "Expression"
 				}
 			},
-			"columnDelimiter": "|",
+			"columnDelimiter": "\u0001",
 			"escapeChar": "\\",
 			"firstRowAsHeader": false,
-			"quoteChar": "\""
+			"quoteChar": ""
 		},
 		"schema": [
 			{

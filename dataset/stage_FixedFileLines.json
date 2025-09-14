@@ -1,0 +1,39 @@
+{
+	"name": "stage_FixedFileLines",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "azure_recon",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "LineId",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "LoadId",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "SourceFile",
+				"type": "varchar"
+			},
+			{
+				"name": "LineText",
+				"type": "varchar"
+			},
+			{
+				"name": "IngestedUtc",
+				"type": "datetime2",
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "STAGE",
+			"table": "FixedFileLines"
+		}
+	}
+}

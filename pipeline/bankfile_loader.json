@@ -381,6 +381,17 @@
 								"enableStaging": false,
 								"translator": {
 									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"type": "String",
+												"ordinal": 1
+											},
+											"sink": {
+												"name": "LineText`"
+											}
+										}
+									],
 									"typeConversion": true,
 									"typeConversionSettings": {
 										"allowDataTruncation": true,
@@ -390,7 +401,7 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "inputBankFile_copy1",
+									"referenceName": "inputBankFile_Fixed",
 									"type": "DatasetReference",
 									"parameters": {
 										"p_filemaster_id": {
@@ -414,7 +425,7 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "stage_blob_raw_data",
+									"referenceName": "stage_FixedFileLines",
 									"type": "DatasetReference"
 								}
 							]

@@ -362,11 +362,25 @@
 												"value": "@variables('filemaster_id')",
 												"type": "Expression"
 											}
+										},
+										{
+											"name": "LoadID",
+											"value": {
+												"value": "@pipeline().RunId",
+												"type": "Expression"
+											}
+										},
+										{
+											"name": "SourceFile",
+											"value": {
+												"value": "@item().name",
+												"type": "Expression"
+											}
 										}
 									],
 									"storeSettings": {
 										"type": "AzureBlobStorageReadSettings",
-										"recursive": true,
+										"recursive": false,
 										"enablePartitionDiscovery": false
 									},
 									"formatSettings": {
@@ -384,11 +398,36 @@
 									"mappings": [
 										{
 											"source": {
+												"name": "filemaster_id",
+												"type": "String"
+											},
+											"sink": {
+												"name": "raw_filemaster_id",
+												"type": "Int64",
+												"physicalType": "bigint"
+											}
+										},
+										{
+											"source": {
 												"type": "String",
+												"physicalType": "String",
 												"ordinal": 1
 											},
 											"sink": {
-												"name": "LineText`"
+												"name": "LineText",
+												"type": "String",
+												"physicalType": "varchar"
+											}
+										},
+										{
+											"source": {
+												"name": "SourceFile",
+												"type": "String"
+											},
+											"sink": {
+												"name": "SourceFile",
+												"type": "String",
+												"physicalType": "varchar"
 											}
 										}
 									],

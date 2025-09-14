@@ -14,8 +14,9 @@
 				"precision": 19
 			},
 			{
-				"name": "LoadId",
-				"type": "uniqueidentifier"
+				"name": "raw_filemaster_id",
+				"type": "bigint",
+				"precision": 19
 			},
 			{
 				"name": "SourceFile",

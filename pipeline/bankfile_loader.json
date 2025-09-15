@@ -518,11 +518,11 @@
 			},
 			"DestinationStore_Location": {
 				"type": "string",
-				"defaultValue": "archive"
+				"defaultValue": "source"
 			},
 			"DestinationStore_Directory": {
 				"type": "string",
-				"defaultValue": "/"
+				"defaultValue": "testbankfiles/archive"
 			}
 		},
 		"variables": {

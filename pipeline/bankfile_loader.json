@@ -226,10 +226,19 @@
 												"type": "Int32",
 												"value": null,
 												"direction": "Output"
+											},
+											{
+												"name": "srcdirectory",
+												"type": "String",
+												"value": {
+													"value": "@pipeline().parameters.SourceStore_Directory",
+													"type": "Expression"
+												},
+												"direction": "Input"
 											}
 										],
 										"type": "Query",
-										"text": "EXEC stage.p_insert_Stage_FileMaster @filename = @scrfilename,\n                                     @filemaster_id = @scrfilemaster_id OUTPUT -- int\n"
+										"text": "EXEC stage.p_insert_Stage_FileMaster @filename = @scrfilename,\n                                    @directory = @srcdirectory,\n                                     @filemaster_id = @scrfilemaster_id OUTPUT -- int\n"
 									}
 								],
 								"scriptBlockExecutionTimeout": "02:00:00"

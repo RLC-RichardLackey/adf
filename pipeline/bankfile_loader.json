@@ -263,7 +263,7 @@
 											}
 										],
 										"type": "Query",
-										"text": "EXEC stage.p_insert_Stage_FileMaster \n@filename = @scrfilename,\n@diretory = @srcdirectory,\n@filetype  = @srcfiletype,\n@filemaster_id = @scrfilemaster_id OUTPUT -- int\n"
+										"text": "EXEC stage.p_insert_Stage_FileMaster \n@filename = @scrfilename,\n@diretory = @srcdirectory,\n@filetype  = @srcfiletype,\n@size = @srcsize,\n@filemaster_id = @scrfilemaster_id OUTPUT -- int\n"
 									}
 								],
 								"scriptBlockExecutionTimeout": "02:00:00"
@@ -488,6 +488,7 @@
 								],
 								"storeSettings": {
 									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
 									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {

@@ -23,6 +23,9 @@
 				"defaultValue": "20250711232250_PP_ACHITEMS_ENTK2823.DAT"
 			}
 		},
+		"folder": {
+			"name": "Not_used"
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {

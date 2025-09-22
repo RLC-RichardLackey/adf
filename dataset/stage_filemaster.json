@@ -5,6 +5,9 @@
 			"referenceName": "azure_recon",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "Not_used"
+		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": [

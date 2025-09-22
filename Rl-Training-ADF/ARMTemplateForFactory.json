@@ -555,7 +555,14 @@
 								{
 									"name": "GetNewFileMaster_ID",
 									"type": "Script",
-									"dependsOn": [],
+									"dependsOn": [
+										{
+											"activity": "Get Metadata Size",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
 									"policy": {
 										"timeout": "0.12:00:00",
 										"retry": 0,
@@ -600,6 +607,15 @@
 														"direction": "Input"
 													},
 													{
+														"name": "srcsize",
+														"type": "String",
+														"value": {
+															"value": "@activity('Get Metadata Size').output.size",
+															"type": "Expression"
+														},
+														"direction": "Input"
+													},
+													{
 														"name": "scrfilemaster_id",
 														"type": "Int32",
 														"value": null,
@@ -607,7 +623,7 @@
 													}
 												],
 												"type": "Query",
-												"text": "EXEC stage.p_insert_Stage_FileMaster \n@filename = @scrfilename,\n@diretory = @srcdirectory,\n@filetype  = @srcfiletype,\n@filemaster_id = @scrfilemaster_id OUTPUT -- int\n"
+												"text": "EXEC stage.p_insert_Stage_FileMaster \n@filename = @scrfilename,\n@diretory = @srcdirectory,\n@filetype  = @srcfiletype,\n@size = @srcsize,\n@filemaster_id = @scrfilemaster_id OUTPUT -- int\n"
 											}
 										],
 										"scriptBlockExecutionTimeout": "02:00:00"
@@ -795,6 +811,51 @@
 											"parameters": {}
 										}
 									]
+								},
+								{
+									"name": "Get Metadata Size",
+									"type": "GetMetadata",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataset": {
+											"referenceName": "inputBankFile_Fixed",
+											"type": "DatasetReference",
+											"parameters": {
+												"p_filemaster_id": 0,
+												"p_container": {
+													"value": "@pipeline().parameters.SourceStore_Location",
+													"type": "Expression"
+												},
+												"p_directory": {
+													"value": "@pipeline().parameters.SourceStore_Directory",
+													"type": "Expression"
+												},
+												"p_filename": {
+													"value": "@item().Name",
+													"type": "Expression"
+												}
+											}
+										},
+										"fieldList": [
+											"size"
+										],
+										"storeSettings": {
+											"type": "AzureBlobStorageReadSettings",
+											"recursive": true,
+											"enablePartitionDiscovery": false
+										},
+										"formatSettings": {
+											"type": "DelimitedTextReadSettings"
+										}
+									}
 								}
 							]
 						}
@@ -1490,6 +1551,45 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/trigger1')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipeline": {
+					"pipelineReference": {
+						"referenceName": "bankfile_loader",
+						"type": "PipelineReference"
+					},
+					"parameters": {
+						"SourceStore_Location": "[parameters('trigger1_properties_pipeline_parameters_SourceStore_Location')]",
+						"SourceStore_Directory": "[parameters('trigger1_properties_pipeline_parameters_SourceStore_Directory')]",
+						"DestinationStore_Location": "[parameters('trigger1_properties_pipeline_parameters_DestinationStore_Location')]",
+						"DestinationStore_Directory": "[parameters('trigger1_properties_pipeline_parameters_DestinationStore_Directory')]",
+						"FileType": "[parameters('trigger1_properties_pipeline_parameters_FileType')]"
+					}
+				},
+				"type": "TumblingWindowTrigger",
+				"typeProperties": {
+					"frequency": "Minute",
+					"interval": 15,
+					"startTime": "2025-09-22T05:55:00Z",
+					"endTime": "2025-09-23T05:55:00Z",
+					"delay": "00:00:30",
+					"maxConcurrency": 1,
+					"retryPolicy": {
+						"count": 3,
+						"intervalInSeconds": 30
+					},
+					"dependsOn": []
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/bankfile_loader')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/df_bankloader')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -1755,45 +1855,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/inputBankFile')]",
 				"[concat(variables('factoryId'), '/datasets/stage_blob_bankfile')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/trigger1')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipeline": {
-					"pipelineReference": {
-						"referenceName": "bankfile_loader",
-						"type": "PipelineReference"
-					},
-					"parameters": {
-						"SourceStore_Location": "[parameters('trigger1_properties_pipeline_parameters_SourceStore_Location')]",
-						"SourceStore_Directory": "[parameters('trigger1_properties_pipeline_parameters_SourceStore_Directory')]",
-						"DestinationStore_Location": "[parameters('trigger1_properties_pipeline_parameters_DestinationStore_Location')]",
-						"DestinationStore_Directory": "[parameters('trigger1_properties_pipeline_parameters_DestinationStore_Directory')]",
-						"FileType": "[parameters('trigger1_properties_pipeline_parameters_FileType')]"
-					}
-				},
-				"type": "TumblingWindowTrigger",
-				"typeProperties": {
-					"frequency": "Minute",
-					"interval": 15,
-					"startTime": "2025-09-22T05:55:00Z",
-					"endTime": "2025-09-23T05:55:00Z",
-					"delay": "00:00:30",
-					"maxConcurrency": 1,
-					"retryPolicy": {
-						"count": 3,
-						"intervalInSeconds": 30
-					},
-					"dependsOn": []
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/bankfile_loader')]"
 			]
 		}
 	]

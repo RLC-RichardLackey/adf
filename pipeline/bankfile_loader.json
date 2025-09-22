@@ -195,7 +195,14 @@
 						{
 							"name": "GetNewFileMaster_ID",
 							"type": "Script",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Get Metadata Size",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"policy": {
 								"timeout": "0.12:00:00",
 								"retry": 0,
@@ -235,6 +242,15 @@
 												"type": "String",
 												"value": {
 													"value": "@pipeline().parameters.FileType",
+													"type": "Expression"
+												},
+												"direction": "Input"
+											},
+											{
+												"name": "srcsize",
+												"type": "String",
+												"value": {
+													"value": "@activity('Get Metadata Size').output.size",
 													"type": "Expression"
 												},
 												"direction": "Input"
@@ -434,6 +450,50 @@
 									"type": "DatasetReference"
 								}
 							]
+						},
+						{
+							"name": "Get Metadata Size",
+							"type": "GetMetadata",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataset": {
+									"referenceName": "inputBankFile_Fixed",
+									"type": "DatasetReference",
+									"parameters": {
+										"p_filemaster_id": 0,
+										"p_container": {
+											"value": "@pipeline().parameters.SourceStore_Location",
+											"type": "Expression"
+										},
+										"p_directory": {
+											"value": "@pipeline().parameters.SourceStore_Directory",
+											"type": "Expression"
+										},
+										"p_filename": {
+											"value": "@item().Name",
+											"type": "Expression"
+										}
+									}
+								},
+								"fieldList": [
+									"size"
+								],
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							}
 						}
 					]
 				}

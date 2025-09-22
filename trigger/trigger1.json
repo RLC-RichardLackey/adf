@@ -1,0 +1,34 @@
+{
+	"name": "trigger1",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipeline": {
+			"pipelineReference": {
+				"referenceName": "bankfile_loader",
+				"type": "PipelineReference"
+			},
+			"parameters": {
+				"SourceStore_Location": "source",
+				"SourceStore_Directory": "testbankfiles",
+				"DestinationStore_Location": "source",
+				"DestinationStore_Directory": "testbankfiles/archive",
+				"FileType": "PAY"
+			}
+		},
+		"type": "TumblingWindowTrigger",
+		"typeProperties": {
+			"frequency": "Minute",
+			"interval": 15,
+			"startTime": "2025-09-22T05:55:00Z",
+			"endTime": "2025-09-23T05:55:00Z",
+			"delay": "00:00:30",
+			"maxConcurrency": 1,
+			"retryPolicy": {
+				"count": 3,
+				"intervalInSeconds": 30
+			},
+			"dependsOn": []
+		}
+	}
+}

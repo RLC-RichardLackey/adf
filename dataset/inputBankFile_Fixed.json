@@ -21,6 +21,10 @@
 			"p_filename": {
 				"type": "string",
 				"defaultValue": "20250606231741_PP_ACHITEMS_ENTK2822.DAT"
+			},
+			"p_filetype": {
+				"type": "string",
+				"defaultValue": "PAY"
 			}
 		},
 		"annotations": [],

@@ -222,12 +222,6 @@
 												"direction": "Input"
 											},
 											{
-												"name": "scrfilemaster_id",
-												"type": "Int32",
-												"value": null,
-												"direction": "Output"
-											},
-											{
 												"name": "srcdirectory",
 												"type": "String",
 												"value": {
@@ -235,10 +229,25 @@
 													"type": "Expression"
 												},
 												"direction": "Input"
+											},
+											{
+												"name": "srcfiletype",
+												"type": "String",
+												"value": {
+													"value": "@pipeline().parameters.FileType",
+													"type": "Expression"
+												},
+												"direction": "Input"
+											},
+											{
+												"name": "scrfilemaster_id",
+												"type": "Int32",
+												"value": null,
+												"direction": "Output"
 											}
 										],
 										"type": "Query",
-										"text": "EXEC stage.p_insert_Stage_FileMaster @filename = @scrfilename,\n                                     @diretory = @srcdirectory,\n                                     @filemaster_id = @scrfilemaster_id OUTPUT -- int\n"
+										"text": "EXEC stage.p_insert_Stage_FileMaster \n@filename = @scrfilename,\n@diretory = @srcdirectory,\n@filetype  = @srcfiletype,\n@filemaster_id = @scrfilemaster_id OUTPUT -- int\n"
 									}
 								],
 								"scriptBlockExecutionTimeout": "02:00:00"
@@ -288,58 +297,6 @@
 									"recursive": true,
 									"enablePartitionDiscovery": false
 								}
-							}
-						},
-						{
-							"name": "LoadFile-to-Azure",
-							"type": "ExecuteDataFlow",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "0.12:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"dataflow": {
-									"referenceName": "dataflow1",
-									"type": "DataFlowReference",
-									"parameters": {
-										"p_filemaster_id": {
-											"value": "@variables('filemaster_id') ",
-											"type": "Expression"
-										},
-										"p_container": {
-											"value": "'@{pipeline().parameters.SourceStore_Location}'",
-											"type": "Expression"
-										},
-										"p_directory": {
-											"value": "'@{pipeline().parameters.SourceStore_Directory}'",
-											"type": "Expression"
-										},
-										"p_filename": {
-											"value": "'@{item().name}'",
-											"type": "Expression"
-										}
-									},
-									"datasetParameters": {
-										"source1": {
-											"p_filemaster_id": 0,
-											"p_container": "source",
-											"p_directory": "testbankfiles",
-											"p_filename": "20250711232250_PP_ACHITEMS_ENTK2823.DAT"
-										}
-									}
-								},
-								"compute": {
-									"coreCount": 8,
-									"computeType": "General"
-								},
-								"traceLevel": "Fine"
 							}
 						},
 						{
@@ -523,6 +480,9 @@
 			"DestinationStore_Directory": {
 				"type": "string",
 				"defaultValue": "testbankfiles/archive"
+			},
+			"FileType": {
+				"type": "string"
 			}
 		},
 		"variables": {

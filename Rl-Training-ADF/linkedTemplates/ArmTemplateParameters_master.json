@@ -1,0 +1,48 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "Rl-Training-ADF"
+		},
+		"Archive_properties_typeProperties_serviceEndpoint": {
+			"value": "https://sqlserverstor.blob.core.windows.net/"
+		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"value": "https://RLTrainingKeyVault.vault.azure.net/"
+		},
+		"Recon_properties_typeProperties_server": {
+			"value": "rltraining.database.windows.net"
+		},
+		"Recon_properties_typeProperties_database": {
+			"value": "recon"
+		},
+		"Recon_properties_typeProperties_userName": {
+			"value": "ralackey305"
+		},
+		"Source_properties_typeProperties_serviceEndpoint": {
+			"value": "https://sqlserverstor.blob.core.windows.net/"
+		},
+		"azure_recon_properties_typeProperties_server": {
+			"value": "rltraining.database.windows.net"
+		},
+		"azure_recon_properties_typeProperties_database": {
+			"value": "Recon"
+		},
+		"azure_recon_properties_typeProperties_userName": {
+			"value": "ralackey305"
+		},
+		"bankFile_properties_typeProperties_serviceEndpoint": {
+			"value": "https://sqlserverstor.blob.core.windows.net/"
+		},
+		"linkedService1_properties_typeProperties_serviceEndpoint": {
+			"value": "https://sqlserverstor.blob.core.windows.net/"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}

@@ -1,0 +1,1741 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "Rl-Training-ADF"
+		},
+		"Archive_properties_typeProperties_serviceEndpoint": {
+			"type": "string",
+			"defaultValue": "https://sqlserverstor.blob.core.windows.net/"
+		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://RLTrainingKeyVault.vault.azure.net/"
+		},
+		"Source_properties_typeProperties_serviceEndpoint": {
+			"type": "string",
+			"defaultValue": "https://sqlserverstor.blob.core.windows.net/"
+		},
+		"bankFile_properties_typeProperties_serviceEndpoint": {
+			"type": "string",
+			"defaultValue": "https://sqlserverstor.blob.core.windows.net/"
+		},
+		"linkedService1_properties_typeProperties_serviceEndpoint": {
+			"type": "string",
+			"defaultValue": "https://sqlserverstor.blob.core.windows.net/"
+		},
+		"Recon_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "rltraining.database.windows.net"
+		},
+		"Recon_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "recon"
+		},
+		"Recon_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "ralackey305"
+		},
+		"azure_recon_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "rltraining.database.windows.net"
+		},
+		"azure_recon_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "Recon"
+		},
+		"azure_recon_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "ralackey305"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Archive')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"serviceEndpoint": "[parameters('Archive_properties_typeProperties_serviceEndpoint')]",
+					"accountKind": "StorageV2"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureKeyVault1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('AzureKeyVault1_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Source')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"serviceEndpoint": "[parameters('Source_properties_typeProperties_serviceEndpoint')]",
+					"accountKind": "StorageV2"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/bankFile')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Frost bank file source ",
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"serviceEndpoint": "[parameters('bankFile_properties_typeProperties_serviceEndpoint')]",
+					"accountKind": "StorageV2"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/linkedService1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"serviceEndpoint": "[parameters('linkedService1_properties_typeProperties_serviceEndpoint')]",
+					"accountKind": "StorageV2"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BinaryDataDestination')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "It describes the destination store.",
+				"linkedServiceName": {
+					"referenceName": "Archive",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"Container": {
+						"type": "String",
+						"defaultValue": "rlstore"
+					},
+					"Directory": {
+						"type": "String"
+					},
+					"filename": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().filename",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().Directory",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().Container",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Archive')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BinaryDataSource_File')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "It describes the file in the data source store.",
+				"linkedServiceName": {
+					"referenceName": "Source",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"Container": {
+						"type": "String"
+					},
+					"Directory": {
+						"type": "String"
+					},
+					"filename": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().filename",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@{dataset().Directory}",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@{dataset().Container}",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Source')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BinaryDataSource_Folder')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "It describes the folder in the data source store.",
+				"linkedServiceName": {
+					"referenceName": "Source",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"Container": {
+						"type": "String",
+						"defaultValue": "rlstore"
+					},
+					"Directory": {
+						"type": "String",
+						"defaultValue": "BankFile"
+					}
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": {
+							"value": "@{dataset().Directory}",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@{dataset().Container}",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Source')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/inputBankFile')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Source",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"p_filemaster_id": {
+						"type": "int",
+						"defaultValue": 0
+					},
+					"p_container": {
+						"type": "string",
+						"defaultValue": "source"
+					},
+					"p_directory": {
+						"type": "string",
+						"defaultValue": "testbankfiles"
+					},
+					"p_filename": {
+						"type": "string",
+						"defaultValue": "20250711232250_PP_ACHITEMS_ENTK2823.DAT"
+					}
+				},
+				"folder": {
+					"name": "Not_used"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().p_filename",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().p_directory",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().p_container",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": "",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Source')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/inputBankFile_Fixed')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Source",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"p_filemaster_id": {
+						"type": "int",
+						"defaultValue": 0
+					},
+					"p_container": {
+						"type": "string",
+						"defaultValue": "source"
+					},
+					"p_directory": {
+						"type": "string",
+						"defaultValue": "testbankfiles"
+					},
+					"p_filename": {
+						"type": "string",
+						"defaultValue": "20250606231741_PP_ACHITEMS_ENTK2822.DAT"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().p_filename",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().p_directory",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().p_container",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": "\u0001",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
+					"quoteChar": ""
+				},
+				"schema": [
+					{
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Source')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Recon')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"server": "[parameters('Recon_properties_typeProperties_server')]",
+					"database": "[parameters('Recon_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('Recon_properties_typeProperties_userName')]",
+					"password": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AzureKeyVault1",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "RLTrain-Azure-Recon"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureKeyVault1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/azure_recon')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('azure_recon_properties_typeProperties_server')]",
+					"database": "[parameters('azure_recon_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": true,
+					"authenticationType": "SQL",
+					"userName": "[parameters('azure_recon_properties_typeProperties_userName')]",
+					"password": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AzureKeyVault1",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "RLTrain-Azure-Recon",
+						"secretVersion": "a5220e4eaae0463db130f88882ac90b2"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureKeyVault1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MoveFiles')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Move files from one folder to another folder",
+				"activities": [
+					{
+						"name": "GetFileList",
+						"description": "Get the list of file",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "BinaryDataSource_Folder",
+								"type": "DatasetReference",
+								"parameters": {
+									"Container": {
+										"value": "@pipeline().parameters.SourceStore_Location",
+										"type": "Expression"
+									},
+									"Directory": {
+										"value": "@pipeline().parameters.SourceStore_Directory",
+										"type": "Expression"
+									}
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true
+							},
+							"formatSettings": {
+								"type": "BinaryReadSettings"
+							}
+						}
+					},
+					{
+						"name": "ForEachFile",
+						"description": "Iterate each file, and move them one by one.",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "FilterFiles",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('FilterFiles').output.value",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "CopyAFile",
+									"description": "Copy a file from the source store to the destination store.",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "BinarySource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": false,
+												"deleteFilesAfterCompletion": false
+											},
+											"formatSettings": {
+												"type": "BinaryReadSettings"
+											},
+											"recursive": false
+										},
+										"sink": {
+											"type": "BinarySink",
+											"storeSettings": {
+												"type": "AzureBlobStorageWriteSettings"
+											}
+										},
+										"enableStaging": false,
+										"preserve": [
+											"Attributes"
+										],
+										"skipErrorFile": {
+											"dataInconsistency": false
+										},
+										"validateDataConsistency": true,
+										"logSettings": {
+											"enableCopyActivityLog": true,
+											"copyActivityLogSettings": {
+												"logLevel": "Info",
+												"enableReliableLogging": false
+											},
+											"logLocationSettings": {
+												"linkedServiceName": {
+													"referenceName": "Source",
+													"type": "LinkedServiceReference"
+												},
+												"path": "source"
+											}
+										},
+										"dataIntegrationUnits": 0
+									},
+									"inputs": [
+										{
+											"referenceName": "BinaryDataSource_File",
+											"type": "DatasetReference",
+											"parameters": {
+												"Container": {
+													"value": "@pipeline().parameters.SourceStore_Location",
+													"type": "Expression"
+												},
+												"Directory": {
+													"value": "@pipeline().parameters.SourceStore_Directory",
+													"type": "Expression"
+												},
+												"filename": {
+													"value": "@item().name",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "BinaryDataDestination",
+											"type": "DatasetReference",
+											"parameters": {
+												"Container": {
+													"value": "@pipeline().parameters.DestinationStore_Location",
+													"type": "Expression"
+												},
+												"Directory": {
+													"value": "@pipeline().parameters.DestinationStore_Directory",
+													"type": "Expression"
+												},
+												"filename": {
+													"value": "@item().name",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								},
+								{
+									"name": "DeleteAFile",
+									"description": "Delete a file from the source store",
+									"type": "Delete",
+									"dependsOn": [
+										{
+											"activity": "CopyAFile",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataset": {
+											"referenceName": "BinaryDataSource_File",
+											"type": "DatasetReference",
+											"parameters": {
+												"Container": {
+													"value": "@pipeline().parameters.SourceStore_Location",
+													"type": "Expression"
+												},
+												"Directory": {
+													"value": "@pipeline().parameters.SourceStore_Directory",
+													"type": "Expression"
+												},
+												"filename": {
+													"value": "@item().name",
+													"type": "Expression"
+												}
+											}
+										},
+										"logStorageSettings": {
+											"linkedServiceName": {
+												"referenceName": "Source",
+												"type": "LinkedServiceReference"
+											},
+											"path": "source"
+										},
+										"enableLogging": true,
+										"storeSettings": {
+											"type": "AzureBlobStorageReadSettings",
+											"recursive": false
+										}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "FilterFiles",
+						"description": "Only files will be selected, the source-folders will not be selected.",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "GetFileList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetFileList').output.childItems",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@equals(item().type, 'File')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"SourceStore_Location": {
+						"type": "string",
+						"defaultValue": "source"
+					},
+					"SourceStore_Directory": {
+						"type": "string",
+						"defaultValue": "bankfiles"
+					},
+					"DestinationStore_Location": {
+						"type": "string",
+						"defaultValue": "archive"
+					},
+					"DestinationStore_Directory": {
+						"type": "string",
+						"defaultValue": "/"
+					}
+				},
+				"variables": {
+					"fn": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/BinaryDataSource_Folder')]",
+				"[concat(variables('factoryId'), '/datasets/BinaryDataSource_File')]",
+				"[concat(variables('factoryId'), '/datasets/BinaryDataDestination')]",
+				"[concat(variables('factoryId'), '/linkedServices/Source')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/stage_FixedFileLines')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "azure_recon",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "LineId",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "raw_filemaster_id",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "SourceFile",
+						"type": "varchar"
+					},
+					{
+						"name": "LineText",
+						"type": "varchar"
+					},
+					{
+						"name": "IngestedUtc",
+						"type": "datetime2",
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "STAGE",
+					"table": "FixedFileLines"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/azure_recon')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/stage_blob_bankfile')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "azure_recon",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Not_used"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "id",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "raw_filemaster_id",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "datarow",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Record_Type_Code",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Transaction_Code",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Receiving_DFI_Identification",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Check_Digit",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DFI_Account_Number",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Amount",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Identification_Number",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Discretionary_Data_Payment_Code",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Addenda_Record_Indicator",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Trace_Number",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Company_Descriptive_Date",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Effective_Date",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "STAGE",
+					"table": "blob_BankFile"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/azure_recon')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/stage_filemaster')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "azure_recon",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Not_used"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "id",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "raw_filemaster_id",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "Record_Type_Code",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Transaction_Code",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Receiving_DFI_Identification",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Check_Digit",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DFI_Account_Number",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Amount",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Identification_Number",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Discretionary_Data_Payment_Code",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Addenda_Record_Indicator",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Trace_Number",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Company_Descriptive_Date",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Effecive_Date",
+						"type": "nvarchar"
+					},
+					{
+						"name": "create_date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "txn_date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "txn_amt",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					}
+				],
+				"typeProperties": {
+					"schema": "STAGE",
+					"table": "Raw_BankFile"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/azure_recon')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/bankfile_loader')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Move files from one folder to another folder",
+				"activities": [
+					{
+						"name": "GetFileList",
+						"description": "Get the list of file",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "BinaryDataSource_Folder",
+								"type": "DatasetReference",
+								"parameters": {
+									"Container": {
+										"value": "@pipeline().parameters.SourceStore_Location",
+										"type": "Expression"
+									},
+									"Directory": {
+										"value": "@pipeline().parameters.SourceStore_Directory",
+										"type": "Expression"
+									}
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true
+							},
+							"formatSettings": {
+								"type": "BinaryReadSettings"
+							}
+						}
+					},
+					{
+						"name": "ForEachFile",
+						"description": "Iterate each file and move them one by one.",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "FilterFiles",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('FilterFiles').output.value",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "CopyAFile",
+									"description": "Copy a file from the source store to the destination store.",
+									"type": "Copy",
+									"dependsOn": [
+										{
+											"activity": "CopyFile_to_Azure",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "BinarySource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": false,
+												"deleteFilesAfterCompletion": false
+											},
+											"formatSettings": {
+												"type": "BinaryReadSettings"
+											},
+											"recursive": false
+										},
+										"sink": {
+											"type": "BinarySink",
+											"storeSettings": {
+												"type": "AzureBlobStorageWriteSettings",
+												"copyBehavior": "PreserveHierarchy"
+											}
+										},
+										"enableStaging": false,
+										"preserve": [
+											"Attributes"
+										],
+										"skipErrorFile": {
+											"dataInconsistency": false
+										},
+										"validateDataConsistency": true,
+										"logSettings": {
+											"enableCopyActivityLog": true,
+											"copyActivityLogSettings": {
+												"logLevel": "Info",
+												"enableReliableLogging": false
+											},
+											"logLocationSettings": {
+												"linkedServiceName": {
+													"referenceName": "Source",
+													"type": "LinkedServiceReference"
+												},
+												"path": "source"
+											}
+										},
+										"dataIntegrationUnits": 0
+									},
+									"inputs": [
+										{
+											"referenceName": "BinaryDataSource_File",
+											"type": "DatasetReference",
+											"parameters": {
+												"Container": {
+													"value": "@pipeline().parameters.SourceStore_Location",
+													"type": "Expression"
+												},
+												"Directory": {
+													"value": "@pipeline().parameters.SourceStore_Directory",
+													"type": "Expression"
+												},
+												"filename": {
+													"value": "@item().name",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "BinaryDataDestination",
+											"type": "DatasetReference",
+											"parameters": {
+												"Container": {
+													"value": "@pipeline().parameters.DestinationStore_Location",
+													"type": "Expression"
+												},
+												"Directory": {
+													"value": "@pipeline().parameters.DestinationStore_Directory",
+													"type": "Expression"
+												},
+												"filename": {
+													"value": "@item().name",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								},
+								{
+									"name": "set_filemaster_id",
+									"type": "SetVariable",
+									"dependsOn": [
+										{
+											"activity": "GetNewFileMaster_ID",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "filemaster_id",
+										"value": {
+											"value": "@activity('GetNewFileMaster_ID').output.outputparameters.scrfilemaster_id",
+											"type": "Expression"
+										}
+									}
+								},
+								{
+									"name": "GetNewFileMaster_ID",
+									"type": "Script",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"linkedServiceName": {
+										"referenceName": "azure_recon",
+										"type": "LinkedServiceReference"
+									},
+									"typeProperties": {
+										"scripts": [
+											{
+												"parameters": [
+													{
+														"name": "scrfilename",
+														"type": "String",
+														"value": {
+															"value": "@item().name",
+															"type": "Expression"
+														},
+														"direction": "Input"
+													},
+													{
+														"name": "srcdirectory",
+														"type": "String",
+														"value": {
+															"value": "@pipeline().parameters.SourceStore_Directory",
+															"type": "Expression"
+														},
+														"direction": "Input"
+													},
+													{
+														"name": "srcfiletype",
+														"type": "String",
+														"value": {
+															"value": "@pipeline().parameters.FileType",
+															"type": "Expression"
+														},
+														"direction": "Input"
+													},
+													{
+														"name": "scrfilemaster_id",
+														"type": "Int32",
+														"value": null,
+														"direction": "Output"
+													}
+												],
+												"type": "Query",
+												"text": "EXEC stage.p_insert_Stage_FileMaster \n@filename = @scrfilename,\n@diretory = @srcdirectory,\n@filetype  = @srcfiletype,\n@filemaster_id = @scrfilemaster_id OUTPUT -- int\n"
+											}
+										],
+										"scriptBlockExecutionTimeout": "02:00:00"
+									}
+								},
+								{
+									"name": "Delete1",
+									"type": "Delete",
+									"dependsOn": [
+										{
+											"activity": "CopyAFile",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataset": {
+											"referenceName": "BinaryDataSource_File",
+											"type": "DatasetReference",
+											"parameters": {
+												"Container": {
+													"value": "@pipeline().parameters.SourceStore_Location",
+													"type": "Expression"
+												},
+												"Directory": {
+													"value": "@pipeline().parameters.SourceStore_Directory",
+													"type": "Expression"
+												},
+												"filename": {
+													"value": "@item().name",
+													"type": "Expression"
+												}
+											}
+										},
+										"enableLogging": false,
+										"storeSettings": {
+											"type": "AzureBlobStorageReadSettings",
+											"recursive": true,
+											"enablePartitionDiscovery": false
+										}
+									}
+								},
+								{
+									"name": "CopyFile_to_Azure",
+									"type": "Copy",
+									"dependsOn": [
+										{
+											"activity": "set_filemaster_id",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"additionalColumns": [
+												{
+													"name": "filemaster_id",
+													"value": {
+														"value": "@variables('filemaster_id')",
+														"type": "Expression"
+													}
+												},
+												{
+													"name": "LoadID",
+													"value": {
+														"value": "@pipeline().RunId",
+														"type": "Expression"
+													}
+												},
+												{
+													"name": "SourceFile",
+													"value": {
+														"value": "@item().name",
+														"type": "Expression"
+													}
+												}
+											],
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": false,
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"writeBehavior": "insert",
+											"sqlWriterUseTableLock": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"mappings": [
+												{
+													"source": {
+														"name": "filemaster_id",
+														"type": "String"
+													},
+													"sink": {
+														"name": "raw_filemaster_id",
+														"type": "Int64",
+														"physicalType": "bigint"
+													}
+												},
+												{
+													"source": {
+														"type": "String",
+														"physicalType": "String",
+														"ordinal": 1
+													},
+													"sink": {
+														"name": "LineText",
+														"type": "String",
+														"physicalType": "varchar"
+													}
+												},
+												{
+													"source": {
+														"name": "SourceFile",
+														"type": "String"
+													},
+													"sink": {
+														"name": "SourceFile",
+														"type": "String",
+														"physicalType": "varchar"
+													}
+												}
+											],
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "inputBankFile_Fixed",
+											"type": "DatasetReference",
+											"parameters": {
+												"p_filemaster_id": {
+													"value": "@variables('filemaster_id')",
+													"type": "Expression"
+												},
+												"p_container": {
+													"value": "@pipeline().parameters.SourceStore_Location",
+													"type": "Expression"
+												},
+												"p_directory": {
+													"value": "@pipeline().parameters.SourceStore_Directory",
+													"type": "Expression"
+												},
+												"p_filename": {
+													"value": "@item().name",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "stage_FixedFileLines",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "FilterFiles",
+						"description": "Only files will be selected, the source-folders will not be selected.",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "GetFileList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetFileList').output.childItems",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@equals(item().type, 'File')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"concurrency": 1,
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"SourceStore_Location": {
+						"type": "string",
+						"defaultValue": "source"
+					},
+					"SourceStore_Directory": {
+						"type": "string",
+						"defaultValue": "testbankfiles"
+					},
+					"DestinationStore_Location": {
+						"type": "string",
+						"defaultValue": "source"
+					},
+					"DestinationStore_Directory": {
+						"type": "string",
+						"defaultValue": "testbankfiles/archive"
+					},
+					"FileType": {
+						"type": "string"
+					}
+				},
+				"variables": {
+					"filemaster_id": {
+						"type": "Integer",
+						"defaultValue": -1
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/BinaryDataSource_Folder')]",
+				"[concat(variables('factoryId'), '/datasets/BinaryDataSource_File')]",
+				"[concat(variables('factoryId'), '/datasets/BinaryDataDestination')]",
+				"[concat(variables('factoryId'), '/linkedServices/azure_recon')]",
+				"[concat(variables('factoryId'), '/datasets/inputBankFile_Fixed')]",
+				"[concat(variables('factoryId'), '/datasets/stage_FixedFileLines')]",
+				"[concat(variables('factoryId'), '/linkedServices/Source')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_parse_bank_nacha_file')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "inputBankFile",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "stage_blob_bankfile",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "select1"
+						},
+						{
+							"name": "filter1"
+						}
+					],
+					"scriptLines": [
+						"parameters{",
+						"     p_filemaster_id as integer (0),",
+						"     p_container as string,",
+						"     p_directory as string,",
+						"     p_filename as string",
+						"}",
+						"source(output(",
+						"          Column_1 as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 derive(fmid = $p_filemaster_id,",
+						"          RecordTypeCode = substring(Column_1,1,1),",
+						"          TransactionCode = substring(Column_1,2,2),",
+						"          ReceivingDFIIdentification = ltrim(substring(Column_1, 4, 8)),",
+						"          CheckDigit = ltrim(substring(Column_1, 12, 1)),",
+						"          DFIAccountNumber = ltrim(substring(Column_1, 13, 17)),",
+						"          Amount = ltrim(substring(Column_1, 30, 10)),",
+						"          IdentificationNumber = ltrim(substring(Column_1, 40, 15)),",
+						"          Name = ltrim(substring(Column_1, 55, 22)),",
+						"          DiscretionaryDataPaymentCode = ltrim(substring(Column_1, 77, 2)),",
+						"          AddendaRecordIndicator = ltrim(substring(Column_1, 79, 1)),",
+						"          TraceNumber = ltrim(substring(Column_1, 80, 15)),",
+						"          company_date = iif(left(Column_1,1)==\"5\", ltrim(substring(Column_1,64,6)),\"\"),",
+						"          effective_date = iif(left(Column_1,1)==\"5\", ltrim(substring(Column_1,70,6)),\"\")) ~> derivedColumn1",
+						"filter1 select(mapColumn(",
+						"          Column_1,",
+						"          fmid,",
+						"          RecordTypeCode,",
+						"          TransactionCode,",
+						"          ReceivingDFIIdentification,",
+						"          CheckDigit,",
+						"          DFIAccountNumber,",
+						"          Amount,",
+						"          IdentificationNumber,",
+						"          Name,",
+						"          DiscretionaryDataPaymentCode,",
+						"          AddendaRecordIndicator,",
+						"          TraceNumber,",
+						"          company_date,",
+						"          effective_date",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"derivedColumn1 filter(RecordTypeCode == \"1\" || RecordTypeCode == \"5\" || RecordTypeCode == \"6\") ~> filter1",
+						"select1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          id as long,",
+						"          raw_filemaster_id as long,",
+						"          datarow as string,",
+						"          Record_Type_Code as string,",
+						"          Transaction_Code as string,",
+						"          Receiving_DFI_Identification as string,",
+						"          Check_Digit as string,",
+						"          DFI_Account_Number as string,",
+						"          Amount as string,",
+						"          Identification_Number as string,",
+						"          Name as string,",
+						"          Discretionary_Data_Payment_Code as string,",
+						"          Addenda_Record_Indicator as string,",
+						"          Trace_Number as string,",
+						"          Company_Descriptive_Date as string,",
+						"          Effective_Date as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          raw_filemaster_id = fmid,",
+						"          datarow = Column_1,",
+						"          Record_Type_Code = RecordTypeCode,",
+						"          Transaction_Code = TransactionCode,",
+						"          Receiving_DFI_Identification = ReceivingDFIIdentification,",
+						"          Check_Digit = CheckDigit,",
+						"          DFI_Account_Number = DFIAccountNumber,",
+						"          Amount,",
+						"          Identification_Number = IdentificationNumber,",
+						"          Name,",
+						"          Discretionary_Data_Payment_Code = DiscretionaryDataPaymentCode,",
+						"          Addenda_Record_Indicator = AddendaRecordIndicator,",
+						"          Trace_Number = TraceNumber,",
+						"          Company_Descriptive_Date = company_date,",
+						"          Effective_Date = effective_date",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/inputBankFile')]",
+				"[concat(variables('factoryId'), '/datasets/stage_blob_bankfile')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_bankloader')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "inputBankFile",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "stage_blob_bankfile",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "select1"
+						},
+						{
+							"name": "filter1"
+						}
+					],
+					"scriptLines": [
+						"parameters{",
+						"     p_filemaster_id as integer (0),",
+						"     p_container as string,",
+						"     p_directory as string,",
+						"     p_filename as string",
+						"}",
+						"source(output(",
+						"          Column_1 as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 derive(fmid = $p_filemaster_id,",
+						"          RecordTypeCode = substring(Column_1,1,1),",
+						"          TransactionCode = substring(Column_1,2,2),",
+						"          ReceivingDFIIdentification = ltrim(substring(Column_1, 4, 8)),",
+						"          CheckDigit = ltrim(substring(Column_1, 12, 1)),",
+						"          DFIAccountNumber = ltrim(substring(Column_1, 13, 17)),",
+						"          Amount = ltrim(substring(Column_1, 30, 10)),",
+						"          IdentificationNumber = ltrim(substring(Column_1, 40, 15)),",
+						"          Name = ltrim(substring(Column_1, 55, 22)),",
+						"          DiscretionaryDataPaymentCode = ltrim(substring(Column_1, 77, 2)),",
+						"          AddendaRecordIndicator = ltrim(substring(Column_1, 79, 1)),",
+						"          TraceNumber = ltrim(substring(Column_1, 80, 15)),",
+						"          company_date = iif(left(Column_1,1)==\"5\", ltrim(substring(Column_1,64,6)),\"\"),",
+						"          effective_date = iif(left(Column_1,1)==\"5\", ltrim(substring(Column_1,70,6)),\"\")) ~> derivedColumn1",
+						"filter1 select(mapColumn(",
+						"          Column_1,",
+						"          fmid,",
+						"          RecordTypeCode,",
+						"          TransactionCode,",
+						"          ReceivingDFIIdentification,",
+						"          CheckDigit,",
+						"          DFIAccountNumber,",
+						"          Amount,",
+						"          IdentificationNumber,",
+						"          Name,",
+						"          DiscretionaryDataPaymentCode,",
+						"          AddendaRecordIndicator,",
+						"          TraceNumber,",
+						"          company_date,",
+						"          effective_date",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"derivedColumn1 filter(RecordTypeCode == \"1\" || RecordTypeCode == \"5\" || RecordTypeCode == \"6\") ~> filter1",
+						"select1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          id as long,",
+						"          raw_filemaster_id as long,",
+						"          datarow as string,",
+						"          Record_Type_Code as string,",
+						"          Transaction_Code as string,",
+						"          Receiving_DFI_Identification as string,",
+						"          Check_Digit as string,",
+						"          DFI_Account_Number as string,",
+						"          Amount as string,",
+						"          Identification_Number as string,",
+						"          Name as string,",
+						"          Discretionary_Data_Payment_Code as string,",
+						"          Addenda_Record_Indicator as string,",
+						"          Trace_Number as string,",
+						"          Company_Descriptive_Date as string,",
+						"          Effective_Date as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          raw_filemaster_id = fmid,",
+						"          datarow = Column_1,",
+						"          Record_Type_Code = RecordTypeCode,",
+						"          Transaction_Code = TransactionCode,",
+						"          Receiving_DFI_Identification = ReceivingDFIIdentification,",
+						"          Check_Digit = CheckDigit,",
+						"          DFI_Account_Number = DFIAccountNumber,",
+						"          Amount,",
+						"          Identification_Number = IdentificationNumber,",
+						"          Name,",
+						"          Discretionary_Data_Payment_Code = DiscretionaryDataPaymentCode,",
+						"          Addenda_Record_Indicator = AddendaRecordIndicator,",
+						"          Trace_Number = TraceNumber,",
+						"          Company_Descriptive_Date = company_date,",
+						"          Effective_Date = effective_date",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/inputBankFile')]",
+				"[concat(variables('factoryId'), '/datasets/stage_blob_bankfile')]"
+			]
+		}
+	]
+}

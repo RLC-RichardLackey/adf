@@ -1,0 +1,32 @@
+{
+	"name": "triggerAllState",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "fixed_file_loader",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"SourceStore_Location": "source",
+					"SourceStore_Directory": "Allstate",
+					"DestinationStore_Location": "source",
+					"DestinationStore_Directory": "Allstate/archive",
+					"FileType": "BILL"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 15,
+				"startTime": "2025-09-23T02:35:00",
+				"endTime": "2025-09-24T02:35:00",
+				"timeZone": "Eastern Standard Time"
+			}
+		}
+	}
+}

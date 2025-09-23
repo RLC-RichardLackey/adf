@@ -70,6 +70,26 @@
 		"trigger1_properties_pipeline_parameters_FileType": {
 			"type": "string",
 			"defaultValue": "PAY"
+		},
+		"triggerAflac_properties_pipeline_parameters_SourceStore_Location": {
+			"type": "string",
+			"defaultValue": "source"
+		},
+		"triggerAflac_properties_pipeline_parameters_SourceStore_Directory": {
+			"type": "string",
+			"defaultValue": "Aflac"
+		},
+		"triggerAflac_properties_pipeline_parameters_DestinationStore_Location": {
+			"type": "string",
+			"defaultValue": "source"
+		},
+		"triggerAflac_properties_pipeline_parameters_DestinationStore_Directory": {
+			"type": "string",
+			"defaultValue": "Aflac/archive"
+		},
+		"triggerAflac_properties_pipeline_parameters_FileType": {
+			"type": "string",
+			"defaultValue": "BILL"
 		}
 	},
 	"variables": {
@@ -357,7 +377,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/bankfile_loader')]",
+			"name": "[concat(parameters('factoryName'), '/fixed_file_loader')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1573,7 +1593,7 @@
 				"runtimeState": "Started",
 				"pipeline": {
 					"pipelineReference": {
-						"referenceName": "bankfile_loader",
+						"referenceName": "fixed_file_loader",
 						"type": "PipelineReference"
 					},
 					"parameters": {
@@ -1600,7 +1620,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/bankfile_loader')]"
+				"[concat(variables('factoryId'), '/pipelines/fixed_file_loader')]"
 			]
 		},
 		{
@@ -1869,6 +1889,44 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/inputBankFile')]",
 				"[concat(variables('factoryId'), '/datasets/stage_blob_bankfile')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/triggerAflac')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipeline": {
+					"pipelineReference": {
+						"referenceName": "fixed_file_loader",
+						"type": "PipelineReference"
+					},
+					"parameters": {
+						"SourceStore_Location": "[parameters('triggerAflac_properties_pipeline_parameters_SourceStore_Location')]",
+						"SourceStore_Directory": "[parameters('triggerAflac_properties_pipeline_parameters_SourceStore_Directory')]",
+						"DestinationStore_Location": "[parameters('triggerAflac_properties_pipeline_parameters_DestinationStore_Location')]",
+						"DestinationStore_Directory": "[parameters('triggerAflac_properties_pipeline_parameters_DestinationStore_Directory')]",
+						"FileType": "[parameters('triggerAflac_properties_pipeline_parameters_FileType')]"
+					}
+				},
+				"type": "TumblingWindowTrigger",
+				"typeProperties": {
+					"frequency": "Minute",
+					"interval": 15,
+					"startTime": "2025-09-23T01:55:00Z",
+					"endTime": "2025-09-25T01:55:00Z",
+					"delay": "00:00:00",
+					"maxConcurrency": 50,
+					"retryPolicy": {
+						"intervalInSeconds": 30
+					},
+					"dependsOn": []
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/fixed_file_loader')]"
 			]
 		}
 	]

@@ -53,6 +53,21 @@
 		"trigger1_properties_pipeline_parameters_FileType": {
 			"value": "PAY"
 		},
+		"triggerAflac_properties_pipeline_parameters_SourceStore_Location": {
+			"value": "source"
+		},
+		"triggerAflac_properties_pipeline_parameters_SourceStore_Directory": {
+			"value": "Aflac"
+		},
+		"triggerAflac_properties_pipeline_parameters_DestinationStore_Location": {
+			"value": "source"
+		},
+		"triggerAflac_properties_pipeline_parameters_DestinationStore_Directory": {
+			"value": "Aflac/archive"
+		},
+		"triggerAflac_properties_pipeline_parameters_FileType": {
+			"value": "BILL"
+		},
 		"containerUri": {
 			"value": ""
 		},

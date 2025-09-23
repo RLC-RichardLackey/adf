@@ -1,0 +1,34 @@
+{
+	"name": "triggerANICO2",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipeline": {
+			"pipelineReference": {
+				"referenceName": "fixed_file_loader",
+				"type": "PipelineReference"
+			},
+			"parameters": {
+				"SourceStore_Location": "source",
+				"SourceStore_Directory": "ANICO",
+				"DestinationStore_Location": "source",
+				"DestinationStore_Directory": "ANICO",
+				"FileType": "BILL"
+			}
+		},
+		"type": "TumblingWindowTrigger",
+		"typeProperties": {
+			"frequency": "Minute",
+			"interval": 15,
+			"startTime": "2025-09-23T02:44:00Z",
+			"endTime": "2025-09-24T02:44:00Z",
+			"delay": "00:00:00",
+			"maxConcurrency": 1,
+			"retryPolicy": {
+				"count": 2,
+				"intervalInSeconds": 30
+			},
+			"dependsOn": []
+		}
+	}
+}

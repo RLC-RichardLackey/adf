@@ -1,5 +1,5 @@
 {
-	"name": "inputBankFile_Fixed",
+	"name": "input_FixedLength4000",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "Source",

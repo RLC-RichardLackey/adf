@@ -1,0 +1,33 @@
+{
+	"name": "triggerTransam",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipeline": {
+			"pipelineReference": {
+				"referenceName": "fixed_file_loader",
+				"type": "PipelineReference"
+			},
+			"parameters": {
+				"SourceStore_Location": "source",
+				"SourceStore_Directory": "Transam",
+				"DestinationStore_Location": "source",
+				"DestinationStore_Directory": "Transam/archive",
+				"FileType": "BILL"
+			}
+		},
+		"type": "TumblingWindowTrigger",
+		"typeProperties": {
+			"frequency": "Minute",
+			"interval": 15,
+			"startTime": "2025-09-23T02:37:00Z",
+			"endTime": "2025-09-24T02:37:00Z",
+			"delay": "00:00:00",
+			"maxConcurrency": 1,
+			"retryPolicy": {
+				"intervalInSeconds": 30
+			},
+			"dependsOn": []
+		}
+	}
+}

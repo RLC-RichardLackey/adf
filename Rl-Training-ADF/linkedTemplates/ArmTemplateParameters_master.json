@@ -63,7 +63,7 @@
 			"value": "source"
 		},
 		"triggerANICO2_properties_pipeline_parameters_DestinationStore_Directory": {
-			"value": "ANICO"
+			"value": "ANICO/archive"
 		},
 		"triggerANICO2_properties_pipeline_parameters_FileType": {
 			"value": "BILL"

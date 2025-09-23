@@ -41,7 +41,7 @@
 		},
 		"triggerANICO2_properties_pipeline_parameters_DestinationStore_Directory": {
 			"type": "string",
-			"defaultValue": "ANICO"
+			"defaultValue": "ANICO/archive"
 		},
 		"triggerANICO2_properties_pipeline_parameters_FileType": {
 			"type": "string",

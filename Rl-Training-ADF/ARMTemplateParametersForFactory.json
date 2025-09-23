@@ -53,6 +53,21 @@
 		"trigger1_properties_pipeline_parameters_FileType": {
 			"value": "PAY"
 		},
+		"triggerANICO2_properties_pipeline_parameters_SourceStore_Location": {
+			"value": "source"
+		},
+		"triggerANICO2_properties_pipeline_parameters_SourceStore_Directory": {
+			"value": "ANICO"
+		},
+		"triggerANICO2_properties_pipeline_parameters_DestinationStore_Location": {
+			"value": "source"
+		},
+		"triggerANICO2_properties_pipeline_parameters_DestinationStore_Directory": {
+			"value": "ANICO"
+		},
+		"triggerANICO2_properties_pipeline_parameters_FileType": {
+			"value": "BILL"
+		},
 		"triggerAflac_properties_pipeline_parameters_SourceStore_Location": {
 			"value": "source"
 		},
@@ -66,6 +81,51 @@
 			"value": "Aflac/archive"
 		},
 		"triggerAflac_properties_pipeline_parameters_FileType": {
+			"value": "BILL"
+		},
+		"triggerAllstate2_properties_pipeline_parameters_SourceStore_Location": {
+			"value": "source"
+		},
+		"triggerAllstate2_properties_pipeline_parameters_SourceStore_Directory": {
+			"value": "Allstate"
+		},
+		"triggerAllstate2_properties_pipeline_parameters_DestinationStore_Location": {
+			"value": "source"
+		},
+		"triggerAllstate2_properties_pipeline_parameters_DestinationStore_Directory": {
+			"value": "Allstate/archive"
+		},
+		"triggerAllstate2_properties_pipeline_parameters_FileType": {
+			"value": "BILL"
+		},
+		"triggerTransam_properties_pipeline_parameters_SourceStore_Location": {
+			"value": "source"
+		},
+		"triggerTransam_properties_pipeline_parameters_SourceStore_Directory": {
+			"value": "Transam"
+		},
+		"triggerTransam_properties_pipeline_parameters_DestinationStore_Location": {
+			"value": "source"
+		},
+		"triggerTransam_properties_pipeline_parameters_DestinationStore_Directory": {
+			"value": "Transam/archive"
+		},
+		"triggerTransam_properties_pipeline_parameters_FileType": {
+			"value": "BILL"
+		},
+		"triggerUnum_properties_pipeline_parameters_SourceStore_Location": {
+			"value": "source"
+		},
+		"triggerUnum_properties_pipeline_parameters_SourceStore_Directory": {
+			"value": "Unum"
+		},
+		"triggerUnum_properties_pipeline_parameters_DestinationStore_Location": {
+			"value": "source"
+		},
+		"triggerUnum_properties_pipeline_parameters_DestinationStore_Directory": {
+			"value": "Unum/archive"
+		},
+		"triggerUnum_properties_pipeline_parameters_FileType": {
 			"value": "BILL"
 		}
 	}

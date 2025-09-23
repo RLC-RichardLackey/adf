@@ -71,6 +71,26 @@
 			"type": "string",
 			"defaultValue": "PAY"
 		},
+		"triggerANICO2_properties_pipeline_parameters_SourceStore_Location": {
+			"type": "string",
+			"defaultValue": "source"
+		},
+		"triggerANICO2_properties_pipeline_parameters_SourceStore_Directory": {
+			"type": "string",
+			"defaultValue": "ANICO"
+		},
+		"triggerANICO2_properties_pipeline_parameters_DestinationStore_Location": {
+			"type": "string",
+			"defaultValue": "source"
+		},
+		"triggerANICO2_properties_pipeline_parameters_DestinationStore_Directory": {
+			"type": "string",
+			"defaultValue": "ANICO"
+		},
+		"triggerANICO2_properties_pipeline_parameters_FileType": {
+			"type": "string",
+			"defaultValue": "BILL"
+		},
 		"triggerAflac_properties_pipeline_parameters_SourceStore_Location": {
 			"type": "string",
 			"defaultValue": "source"
@@ -88,6 +108,66 @@
 			"defaultValue": "Aflac/archive"
 		},
 		"triggerAflac_properties_pipeline_parameters_FileType": {
+			"type": "string",
+			"defaultValue": "BILL"
+		},
+		"triggerAllstate2_properties_pipeline_parameters_SourceStore_Location": {
+			"type": "string",
+			"defaultValue": "source"
+		},
+		"triggerAllstate2_properties_pipeline_parameters_SourceStore_Directory": {
+			"type": "string",
+			"defaultValue": "Allstate"
+		},
+		"triggerAllstate2_properties_pipeline_parameters_DestinationStore_Location": {
+			"type": "string",
+			"defaultValue": "source"
+		},
+		"triggerAllstate2_properties_pipeline_parameters_DestinationStore_Directory": {
+			"type": "string",
+			"defaultValue": "Allstate/archive"
+		},
+		"triggerAllstate2_properties_pipeline_parameters_FileType": {
+			"type": "string",
+			"defaultValue": "BILL"
+		},
+		"triggerTransam_properties_pipeline_parameters_SourceStore_Location": {
+			"type": "string",
+			"defaultValue": "source"
+		},
+		"triggerTransam_properties_pipeline_parameters_SourceStore_Directory": {
+			"type": "string",
+			"defaultValue": "Transam"
+		},
+		"triggerTransam_properties_pipeline_parameters_DestinationStore_Location": {
+			"type": "string",
+			"defaultValue": "source"
+		},
+		"triggerTransam_properties_pipeline_parameters_DestinationStore_Directory": {
+			"type": "string",
+			"defaultValue": "Transam/archive"
+		},
+		"triggerTransam_properties_pipeline_parameters_FileType": {
+			"type": "string",
+			"defaultValue": "BILL"
+		},
+		"triggerUnum_properties_pipeline_parameters_SourceStore_Location": {
+			"type": "string",
+			"defaultValue": "source"
+		},
+		"triggerUnum_properties_pipeline_parameters_SourceStore_Directory": {
+			"type": "string",
+			"defaultValue": "Unum"
+		},
+		"triggerUnum_properties_pipeline_parameters_DestinationStore_Location": {
+			"type": "string",
+			"defaultValue": "source"
+		},
+		"triggerUnum_properties_pipeline_parameters_DestinationStore_Directory": {
+			"type": "string",
+			"defaultValue": "Unum/archive"
+		},
+		"triggerUnum_properties_pipeline_parameters_FileType": {
 			"type": "string",
 			"defaultValue": "BILL"
 		}
@@ -1624,6 +1704,242 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/triggerANICO')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 15,
+						"startTime": "2025-09-23T02:36:00",
+						"endTime": "2025-09-24T02:36:00",
+						"timeZone": "Eastern Standard Time"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/triggerANICO2')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipeline": {
+					"pipelineReference": {
+						"referenceName": "fixed_file_loader",
+						"type": "PipelineReference"
+					},
+					"parameters": {
+						"SourceStore_Location": "[parameters('triggerANICO2_properties_pipeline_parameters_SourceStore_Location')]",
+						"SourceStore_Directory": "[parameters('triggerANICO2_properties_pipeline_parameters_SourceStore_Directory')]",
+						"DestinationStore_Location": "[parameters('triggerANICO2_properties_pipeline_parameters_DestinationStore_Location')]",
+						"DestinationStore_Directory": "[parameters('triggerANICO2_properties_pipeline_parameters_DestinationStore_Directory')]",
+						"FileType": "[parameters('triggerANICO2_properties_pipeline_parameters_FileType')]"
+					}
+				},
+				"type": "TumblingWindowTrigger",
+				"typeProperties": {
+					"frequency": "Minute",
+					"interval": 15,
+					"startTime": "2025-09-23T02:44:00Z",
+					"endTime": "2025-09-24T02:44:00Z",
+					"delay": "00:00:00",
+					"maxConcurrency": 1,
+					"retryPolicy": {
+						"count": 2,
+						"intervalInSeconds": 30
+					},
+					"dependsOn": []
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/fixed_file_loader')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/triggerAflac')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipeline": {
+					"pipelineReference": {
+						"referenceName": "fixed_file_loader",
+						"type": "PipelineReference"
+					},
+					"parameters": {
+						"SourceStore_Location": "[parameters('triggerAflac_properties_pipeline_parameters_SourceStore_Location')]",
+						"SourceStore_Directory": "[parameters('triggerAflac_properties_pipeline_parameters_SourceStore_Directory')]",
+						"DestinationStore_Location": "[parameters('triggerAflac_properties_pipeline_parameters_DestinationStore_Location')]",
+						"DestinationStore_Directory": "[parameters('triggerAflac_properties_pipeline_parameters_DestinationStore_Directory')]",
+						"FileType": "[parameters('triggerAflac_properties_pipeline_parameters_FileType')]"
+					}
+				},
+				"type": "TumblingWindowTrigger",
+				"typeProperties": {
+					"frequency": "Minute",
+					"interval": 15,
+					"startTime": "2025-09-23T01:55:00Z",
+					"endTime": "2025-09-25T01:55:00Z",
+					"delay": "00:00:00",
+					"maxConcurrency": 1,
+					"retryPolicy": {
+						"count": 2,
+						"intervalInSeconds": 30
+					},
+					"dependsOn": []
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/fixed_file_loader')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/triggerAllState')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 15,
+						"startTime": "2025-09-23T02:35:00",
+						"endTime": "2025-09-24T02:35:00",
+						"timeZone": "Eastern Standard Time"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/triggerAllstate2')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipeline": {
+					"pipelineReference": {
+						"referenceName": "fixed_file_loader",
+						"type": "PipelineReference"
+					},
+					"parameters": {
+						"SourceStore_Location": "[parameters('triggerAllstate2_properties_pipeline_parameters_SourceStore_Location')]",
+						"SourceStore_Directory": "[parameters('triggerAllstate2_properties_pipeline_parameters_SourceStore_Directory')]",
+						"DestinationStore_Location": "[parameters('triggerAllstate2_properties_pipeline_parameters_DestinationStore_Location')]",
+						"DestinationStore_Directory": "[parameters('triggerAllstate2_properties_pipeline_parameters_DestinationStore_Directory')]",
+						"FileType": "[parameters('triggerAllstate2_properties_pipeline_parameters_FileType')]"
+					}
+				},
+				"type": "TumblingWindowTrigger",
+				"typeProperties": {
+					"frequency": "Minute",
+					"interval": 15,
+					"startTime": "2025-09-23T02:43:00Z",
+					"endTime": "2025-09-24T02:43:00Z",
+					"delay": "00:00:00",
+					"maxConcurrency": 1,
+					"retryPolicy": {
+						"count": 2,
+						"intervalInSeconds": 30
+					},
+					"dependsOn": []
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/fixed_file_loader')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/triggerTransam')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipeline": {
+					"pipelineReference": {
+						"referenceName": "fixed_file_loader",
+						"type": "PipelineReference"
+					},
+					"parameters": {
+						"SourceStore_Location": "[parameters('triggerTransam_properties_pipeline_parameters_SourceStore_Location')]",
+						"SourceStore_Directory": "[parameters('triggerTransam_properties_pipeline_parameters_SourceStore_Directory')]",
+						"DestinationStore_Location": "[parameters('triggerTransam_properties_pipeline_parameters_DestinationStore_Location')]",
+						"DestinationStore_Directory": "[parameters('triggerTransam_properties_pipeline_parameters_DestinationStore_Directory')]",
+						"FileType": "[parameters('triggerTransam_properties_pipeline_parameters_FileType')]"
+					}
+				},
+				"type": "TumblingWindowTrigger",
+				"typeProperties": {
+					"frequency": "Minute",
+					"interval": 15,
+					"startTime": "2025-09-23T02:37:00Z",
+					"endTime": "2025-09-24T02:37:00Z",
+					"delay": "00:00:00",
+					"maxConcurrency": 1,
+					"retryPolicy": {
+						"intervalInSeconds": 30
+					},
+					"dependsOn": []
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/fixed_file_loader')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/triggerUnum')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipeline": {
+					"pipelineReference": {
+						"referenceName": "fixed_file_loader",
+						"type": "PipelineReference"
+					},
+					"parameters": {
+						"SourceStore_Location": "[parameters('triggerUnum_properties_pipeline_parameters_SourceStore_Location')]",
+						"SourceStore_Directory": "[parameters('triggerUnum_properties_pipeline_parameters_SourceStore_Directory')]",
+						"DestinationStore_Location": "[parameters('triggerUnum_properties_pipeline_parameters_DestinationStore_Location')]",
+						"DestinationStore_Directory": "[parameters('triggerUnum_properties_pipeline_parameters_DestinationStore_Directory')]",
+						"FileType": "[parameters('triggerUnum_properties_pipeline_parameters_FileType')]"
+					}
+				},
+				"type": "TumblingWindowTrigger",
+				"typeProperties": {
+					"frequency": "Minute",
+					"interval": 15,
+					"startTime": "2025-09-23T02:39:00Z",
+					"endTime": "2025-09-24T02:39:00Z",
+					"delay": "00:00:00",
+					"maxConcurrency": 1,
+					"retryPolicy": {
+						"count": 2,
+						"intervalInSeconds": 30
+					},
+					"dependsOn": []
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/fixed_file_loader')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/df_bankloader')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -1889,44 +2205,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/inputBankFile')]",
 				"[concat(variables('factoryId'), '/datasets/stage_blob_bankfile')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/triggerAflac')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipeline": {
-					"pipelineReference": {
-						"referenceName": "fixed_file_loader",
-						"type": "PipelineReference"
-					},
-					"parameters": {
-						"SourceStore_Location": "[parameters('triggerAflac_properties_pipeline_parameters_SourceStore_Location')]",
-						"SourceStore_Directory": "[parameters('triggerAflac_properties_pipeline_parameters_SourceStore_Directory')]",
-						"DestinationStore_Location": "[parameters('triggerAflac_properties_pipeline_parameters_DestinationStore_Location')]",
-						"DestinationStore_Directory": "[parameters('triggerAflac_properties_pipeline_parameters_DestinationStore_Directory')]",
-						"FileType": "[parameters('triggerAflac_properties_pipeline_parameters_FileType')]"
-					}
-				},
-				"type": "TumblingWindowTrigger",
-				"typeProperties": {
-					"frequency": "Minute",
-					"interval": 15,
-					"startTime": "2025-09-23T01:55:00Z",
-					"endTime": "2025-09-25T01:55:00Z",
-					"delay": "00:00:00",
-					"maxConcurrency": 50,
-					"retryPolicy": {
-						"intervalInSeconds": 30
-					},
-					"dependsOn": []
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/fixed_file_loader')]"
 			]
 		}
 	]

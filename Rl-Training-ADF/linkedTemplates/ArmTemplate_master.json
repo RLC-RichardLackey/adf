@@ -71,6 +71,26 @@
 			"type": "string",
 			"defaultValue": "PAY"
 		},
+		"triggerANICO2_properties_pipeline_parameters_SourceStore_Location": {
+			"type": "string",
+			"defaultValue": "source"
+		},
+		"triggerANICO2_properties_pipeline_parameters_SourceStore_Directory": {
+			"type": "string",
+			"defaultValue": "ANICO"
+		},
+		"triggerANICO2_properties_pipeline_parameters_DestinationStore_Location": {
+			"type": "string",
+			"defaultValue": "source"
+		},
+		"triggerANICO2_properties_pipeline_parameters_DestinationStore_Directory": {
+			"type": "string",
+			"defaultValue": "ANICO"
+		},
+		"triggerANICO2_properties_pipeline_parameters_FileType": {
+			"type": "string",
+			"defaultValue": "BILL"
+		},
 		"triggerAflac_properties_pipeline_parameters_SourceStore_Location": {
 			"type": "string",
 			"defaultValue": "source"
@@ -88,6 +108,66 @@
 			"defaultValue": "Aflac/archive"
 		},
 		"triggerAflac_properties_pipeline_parameters_FileType": {
+			"type": "string",
+			"defaultValue": "BILL"
+		},
+		"triggerAllstate2_properties_pipeline_parameters_SourceStore_Location": {
+			"type": "string",
+			"defaultValue": "source"
+		},
+		"triggerAllstate2_properties_pipeline_parameters_SourceStore_Directory": {
+			"type": "string",
+			"defaultValue": "Allstate"
+		},
+		"triggerAllstate2_properties_pipeline_parameters_DestinationStore_Location": {
+			"type": "string",
+			"defaultValue": "source"
+		},
+		"triggerAllstate2_properties_pipeline_parameters_DestinationStore_Directory": {
+			"type": "string",
+			"defaultValue": "Allstate/archive"
+		},
+		"triggerAllstate2_properties_pipeline_parameters_FileType": {
+			"type": "string",
+			"defaultValue": "BILL"
+		},
+		"triggerTransam_properties_pipeline_parameters_SourceStore_Location": {
+			"type": "string",
+			"defaultValue": "source"
+		},
+		"triggerTransam_properties_pipeline_parameters_SourceStore_Directory": {
+			"type": "string",
+			"defaultValue": "Transam"
+		},
+		"triggerTransam_properties_pipeline_parameters_DestinationStore_Location": {
+			"type": "string",
+			"defaultValue": "source"
+		},
+		"triggerTransam_properties_pipeline_parameters_DestinationStore_Directory": {
+			"type": "string",
+			"defaultValue": "Transam/archive"
+		},
+		"triggerTransam_properties_pipeline_parameters_FileType": {
+			"type": "string",
+			"defaultValue": "BILL"
+		},
+		"triggerUnum_properties_pipeline_parameters_SourceStore_Location": {
+			"type": "string",
+			"defaultValue": "source"
+		},
+		"triggerUnum_properties_pipeline_parameters_SourceStore_Directory": {
+			"type": "string",
+			"defaultValue": "Unum"
+		},
+		"triggerUnum_properties_pipeline_parameters_DestinationStore_Location": {
+			"type": "string",
+			"defaultValue": "source"
+		},
+		"triggerUnum_properties_pipeline_parameters_DestinationStore_Directory": {
+			"type": "string",
+			"defaultValue": "Unum/archive"
+		},
+		"triggerUnum_properties_pipeline_parameters_FileType": {
 			"type": "string",
 			"defaultValue": "BILL"
 		},
@@ -150,21 +230,6 @@
 					},
 					"azure_recon_properties_typeProperties_userName": {
 						"value": "[parameters('azure_recon_properties_typeProperties_userName')]"
-					},
-					"trigger1_properties_pipeline_parameters_SourceStore_Location": {
-						"value": "[parameters('trigger1_properties_pipeline_parameters_SourceStore_Location')]"
-					},
-					"trigger1_properties_pipeline_parameters_SourceStore_Directory": {
-						"value": "[parameters('trigger1_properties_pipeline_parameters_SourceStore_Directory')]"
-					},
-					"trigger1_properties_pipeline_parameters_DestinationStore_Location": {
-						"value": "[parameters('trigger1_properties_pipeline_parameters_DestinationStore_Location')]"
-					},
-					"trigger1_properties_pipeline_parameters_DestinationStore_Directory": {
-						"value": "[parameters('trigger1_properties_pipeline_parameters_DestinationStore_Directory')]"
-					},
-					"trigger1_properties_pipeline_parameters_FileType": {
-						"value": "[parameters('trigger1_properties_pipeline_parameters_FileType')]"
 					}
 				}
 			},
@@ -184,6 +249,36 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"trigger1_properties_pipeline_parameters_SourceStore_Location": {
+						"value": "[parameters('trigger1_properties_pipeline_parameters_SourceStore_Location')]"
+					},
+					"trigger1_properties_pipeline_parameters_SourceStore_Directory": {
+						"value": "[parameters('trigger1_properties_pipeline_parameters_SourceStore_Directory')]"
+					},
+					"trigger1_properties_pipeline_parameters_DestinationStore_Location": {
+						"value": "[parameters('trigger1_properties_pipeline_parameters_DestinationStore_Location')]"
+					},
+					"trigger1_properties_pipeline_parameters_DestinationStore_Directory": {
+						"value": "[parameters('trigger1_properties_pipeline_parameters_DestinationStore_Directory')]"
+					},
+					"trigger1_properties_pipeline_parameters_FileType": {
+						"value": "[parameters('trigger1_properties_pipeline_parameters_FileType')]"
+					},
+					"triggerANICO2_properties_pipeline_parameters_SourceStore_Location": {
+						"value": "[parameters('triggerANICO2_properties_pipeline_parameters_SourceStore_Location')]"
+					},
+					"triggerANICO2_properties_pipeline_parameters_SourceStore_Directory": {
+						"value": "[parameters('triggerANICO2_properties_pipeline_parameters_SourceStore_Directory')]"
+					},
+					"triggerANICO2_properties_pipeline_parameters_DestinationStore_Location": {
+						"value": "[parameters('triggerANICO2_properties_pipeline_parameters_DestinationStore_Location')]"
+					},
+					"triggerANICO2_properties_pipeline_parameters_DestinationStore_Directory": {
+						"value": "[parameters('triggerANICO2_properties_pipeline_parameters_DestinationStore_Directory')]"
+					},
+					"triggerANICO2_properties_pipeline_parameters_FileType": {
+						"value": "[parameters('triggerANICO2_properties_pipeline_parameters_FileType')]"
+					},
 					"triggerAflac_properties_pipeline_parameters_SourceStore_Location": {
 						"value": "[parameters('triggerAflac_properties_pipeline_parameters_SourceStore_Location')]"
 					},
@@ -198,6 +293,51 @@
 					},
 					"triggerAflac_properties_pipeline_parameters_FileType": {
 						"value": "[parameters('triggerAflac_properties_pipeline_parameters_FileType')]"
+					},
+					"triggerAllstate2_properties_pipeline_parameters_SourceStore_Location": {
+						"value": "[parameters('triggerAllstate2_properties_pipeline_parameters_SourceStore_Location')]"
+					},
+					"triggerAllstate2_properties_pipeline_parameters_SourceStore_Directory": {
+						"value": "[parameters('triggerAllstate2_properties_pipeline_parameters_SourceStore_Directory')]"
+					},
+					"triggerAllstate2_properties_pipeline_parameters_DestinationStore_Location": {
+						"value": "[parameters('triggerAllstate2_properties_pipeline_parameters_DestinationStore_Location')]"
+					},
+					"triggerAllstate2_properties_pipeline_parameters_DestinationStore_Directory": {
+						"value": "[parameters('triggerAllstate2_properties_pipeline_parameters_DestinationStore_Directory')]"
+					},
+					"triggerAllstate2_properties_pipeline_parameters_FileType": {
+						"value": "[parameters('triggerAllstate2_properties_pipeline_parameters_FileType')]"
+					},
+					"triggerTransam_properties_pipeline_parameters_SourceStore_Location": {
+						"value": "[parameters('triggerTransam_properties_pipeline_parameters_SourceStore_Location')]"
+					},
+					"triggerTransam_properties_pipeline_parameters_SourceStore_Directory": {
+						"value": "[parameters('triggerTransam_properties_pipeline_parameters_SourceStore_Directory')]"
+					},
+					"triggerTransam_properties_pipeline_parameters_DestinationStore_Location": {
+						"value": "[parameters('triggerTransam_properties_pipeline_parameters_DestinationStore_Location')]"
+					},
+					"triggerTransam_properties_pipeline_parameters_DestinationStore_Directory": {
+						"value": "[parameters('triggerTransam_properties_pipeline_parameters_DestinationStore_Directory')]"
+					},
+					"triggerTransam_properties_pipeline_parameters_FileType": {
+						"value": "[parameters('triggerTransam_properties_pipeline_parameters_FileType')]"
+					},
+					"triggerUnum_properties_pipeline_parameters_SourceStore_Location": {
+						"value": "[parameters('triggerUnum_properties_pipeline_parameters_SourceStore_Location')]"
+					},
+					"triggerUnum_properties_pipeline_parameters_SourceStore_Directory": {
+						"value": "[parameters('triggerUnum_properties_pipeline_parameters_SourceStore_Directory')]"
+					},
+					"triggerUnum_properties_pipeline_parameters_DestinationStore_Location": {
+						"value": "[parameters('triggerUnum_properties_pipeline_parameters_DestinationStore_Location')]"
+					},
+					"triggerUnum_properties_pipeline_parameters_DestinationStore_Directory": {
+						"value": "[parameters('triggerUnum_properties_pipeline_parameters_DestinationStore_Directory')]"
+					},
+					"triggerUnum_properties_pipeline_parameters_FileType": {
+						"value": "[parameters('triggerUnum_properties_pipeline_parameters_FileType')]"
 					}
 				}
 			},

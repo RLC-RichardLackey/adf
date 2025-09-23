@@ -429,7 +429,7 @@
 									"type": "Copy",
 									"dependsOn": [
 										{
-											"activity": "CopyFile_to_Azure",
+											"activity": "If Condition1",
 											"dependencyConditions": [
 												"Succeeded"
 											]
@@ -676,143 +676,6 @@
 									}
 								},
 								{
-									"name": "CopyFile_to_Azure",
-									"type": "Copy",
-									"dependsOn": [
-										{
-											"activity": "set_filemaster_id",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "DelimitedTextSource",
-											"additionalColumns": [
-												{
-													"name": "filemaster_id",
-													"value": {
-														"value": "@variables('filemaster_id')",
-														"type": "Expression"
-													}
-												},
-												{
-													"name": "LoadID",
-													"value": {
-														"value": "@pipeline().RunId",
-														"type": "Expression"
-													}
-												},
-												{
-													"name": "SourceFile",
-													"value": {
-														"value": "@item().name",
-														"type": "Expression"
-													}
-												}
-											],
-											"storeSettings": {
-												"type": "AzureBlobStorageReadSettings",
-												"recursive": false,
-												"enablePartitionDiscovery": false
-											},
-											"formatSettings": {
-												"type": "DelimitedTextReadSettings"
-											}
-										},
-										"sink": {
-											"type": "AzureSqlSink",
-											"writeBehavior": "insert",
-											"sqlWriterUseTableLock": false
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"mappings": [
-												{
-													"source": {
-														"name": "filemaster_id",
-														"type": "String"
-													},
-													"sink": {
-														"name": "raw_filemaster_id",
-														"type": "Int64",
-														"physicalType": "bigint"
-													}
-												},
-												{
-													"source": {
-														"type": "String",
-														"physicalType": "String",
-														"ordinal": 1
-													},
-													"sink": {
-														"name": "LineText",
-														"type": "String",
-														"physicalType": "varchar"
-													}
-												},
-												{
-													"source": {
-														"name": "SourceFile",
-														"type": "String"
-													},
-													"sink": {
-														"name": "SourceFile",
-														"type": "String",
-														"physicalType": "varchar"
-													}
-												}
-											],
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "inputBankFile_Fixed",
-											"type": "DatasetReference",
-											"parameters": {
-												"p_filemaster_id": {
-													"value": "@variables('filemaster_id')",
-													"type": "Expression"
-												},
-												"p_container": {
-													"value": "@pipeline().parameters.SourceStore_Location",
-													"type": "Expression"
-												},
-												"p_directory": {
-													"value": "@pipeline().parameters.SourceStore_Directory",
-													"type": "Expression"
-												},
-												"p_filename": {
-													"value": "@item().name",
-													"type": "Expression"
-												}
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "stage_FixedFileLines",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									]
-								},
-								{
 									"name": "Get Metadata Size",
 									"type": "GetMetadata",
 									"dependsOn": [],
@@ -826,7 +689,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"dataset": {
-											"referenceName": "inputBankFile_Fixed",
+											"referenceName": "input_FixedLength4000",
 											"type": "DatasetReference",
 											"parameters": {
 												"p_filemaster_id": 0,
@@ -855,6 +718,157 @@
 										"formatSettings": {
 											"type": "DelimitedTextReadSettings"
 										}
+									}
+								},
+								{
+									"name": "If Condition1",
+									"type": "IfCondition",
+									"dependsOn": [
+										{
+											"activity": "set_filemaster_id",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"expression": {
+											"value": "@greater(activity('Get Metadata Size').output.size , 0)",
+											"type": "Expression"
+										},
+										"ifTrueActivities": [
+											{
+												"name": "CopyFile_to_Azure",
+												"type": "Copy",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "0.12:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"source": {
+														"type": "DelimitedTextSource",
+														"additionalColumns": [
+															{
+																"name": "filemaster_id",
+																"value": {
+																	"value": "@variables('filemaster_id')",
+																	"type": "Expression"
+																}
+															},
+															{
+																"name": "LoadID",
+																"value": {
+																	"value": "@pipeline().RunId",
+																	"type": "Expression"
+																}
+															},
+															{
+																"name": "SourceFile",
+																"value": {
+																	"value": "@item().name",
+																	"type": "Expression"
+																}
+															}
+														],
+														"storeSettings": {
+															"type": "AzureBlobStorageReadSettings",
+															"recursive": false,
+															"enablePartitionDiscovery": false
+														},
+														"formatSettings": {
+															"type": "DelimitedTextReadSettings"
+														}
+													},
+													"sink": {
+														"type": "AzureSqlSink",
+														"writeBehavior": "insert",
+														"sqlWriterUseTableLock": false
+													},
+													"enableStaging": false,
+													"translator": {
+														"type": "TabularTranslator",
+														"mappings": [
+															{
+																"source": {
+																	"name": "filemaster_id",
+																	"type": "String"
+																},
+																"sink": {
+																	"name": "raw_filemaster_id",
+																	"type": "Int64",
+																	"physicalType": "bigint"
+																}
+															},
+															{
+																"source": {
+																	"type": "String",
+																	"physicalType": "String",
+																	"ordinal": 1
+																},
+																"sink": {
+																	"name": "LineText",
+																	"type": "String",
+																	"physicalType": "varchar"
+																}
+															},
+															{
+																"source": {
+																	"name": "SourceFile",
+																	"type": "String"
+																},
+																"sink": {
+																	"name": "SourceFile",
+																	"type": "String",
+																	"physicalType": "varchar"
+																}
+															}
+														],
+														"typeConversion": true,
+														"typeConversionSettings": {
+															"allowDataTruncation": true,
+															"treatBooleanAsNumber": false
+														}
+													}
+												},
+												"inputs": [
+													{
+														"referenceName": "input_FixedLength4000",
+														"type": "DatasetReference",
+														"parameters": {
+															"p_filemaster_id": {
+																"value": "@variables('filemaster_id')",
+																"type": "Expression"
+															},
+															"p_container": {
+																"value": "@pipeline().parameters.SourceStore_Location",
+																"type": "Expression"
+															},
+															"p_directory": {
+																"value": "@pipeline().parameters.SourceStore_Directory",
+																"type": "Expression"
+															},
+															"p_filename": {
+																"value": "@item().name",
+																"type": "Expression"
+															}
+														}
+													}
+												],
+												"outputs": [
+													{
+														"referenceName": "stage_FixedFileLines",
+														"type": "DatasetReference",
+														"parameters": {}
+													}
+												]
+											}
+										]
 									}
 								}
 							]
@@ -923,9 +937,9 @@
 				"[concat(variables('factoryId'), '/datasets/BinaryDataSource_File')]",
 				"[concat(variables('factoryId'), '/datasets/BinaryDataDestination')]",
 				"[concat(variables('factoryId'), '/linkedServices/azure_recon')]",
-				"[concat(variables('factoryId'), '/datasets/inputBankFile_Fixed')]",
-				"[concat(variables('factoryId'), '/datasets/stage_FixedFileLines')]",
-				"[concat(variables('factoryId'), '/linkedServices/Source')]"
+				"[concat(variables('factoryId'), '/datasets/input_FixedLength4000')]",
+				"[concat(variables('factoryId'), '/linkedServices/Source')]",
+				"[concat(variables('factoryId'), '/datasets/stage_FixedFileLines')]"
 			]
 		},
 		{
@@ -1123,7 +1137,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/inputBankFile_Fixed')]",
+			"name": "[concat(parameters('factoryName'), '/input_FixedLength4000')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {

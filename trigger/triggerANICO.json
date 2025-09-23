@@ -3,21 +3,7 @@
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Started",
-		"pipelines": [
-			{
-				"pipelineReference": {
-					"referenceName": "fixed_file_loader",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"SourceStore_Location": "source",
-					"SourceStore_Directory": "ANICIO",
-					"DestinationStore_Location": "source",
-					"DestinationStore_Directory": "ANICO/archive",
-					"FileType": "BILL"
-				}
-			}
-		],
+		"pipelines": [],
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {

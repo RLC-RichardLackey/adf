@@ -12,7 +12,7 @@
 				"SourceStore_Location": "source",
 				"SourceStore_Directory": "ANICO",
 				"DestinationStore_Location": "source",
-				"DestinationStore_Directory": "ANICO",
+				"DestinationStore_Directory": "ANICO/archive",
 				"FileType": "BILL"
 			}
 		},

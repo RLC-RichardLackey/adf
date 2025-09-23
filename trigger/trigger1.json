@@ -5,7 +5,7 @@
 		"runtimeState": "Started",
 		"pipeline": {
 			"pipelineReference": {
-				"referenceName": "bankfile_loader",
+				"referenceName": "fixed_file_loader",
 				"type": "PipelineReference"
 			},
 			"parameters": {

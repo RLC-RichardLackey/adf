@@ -1,0 +1,33 @@
+{
+	"name": "triggerAflac",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipeline": {
+			"pipelineReference": {
+				"referenceName": "fixed_file_loader",
+				"type": "PipelineReference"
+			},
+			"parameters": {
+				"SourceStore_Location": "source",
+				"SourceStore_Directory": "Aflac",
+				"DestinationStore_Location": "source",
+				"DestinationStore_Directory": "Aflac/archive",
+				"FileType": "BILL"
+			}
+		},
+		"type": "TumblingWindowTrigger",
+		"typeProperties": {
+			"frequency": "Minute",
+			"interval": 15,
+			"startTime": "2025-09-23T01:55:00Z",
+			"endTime": "2025-09-25T01:55:00Z",
+			"delay": "00:00:00",
+			"maxConcurrency": 50,
+			"retryPolicy": {
+				"intervalInSeconds": 30
+			},
+			"dependsOn": []
+		}
+	}
+}

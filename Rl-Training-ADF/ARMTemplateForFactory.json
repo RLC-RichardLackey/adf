@@ -997,6 +997,42 @@
 								"type": "Expression"
 							}
 						}
+					},
+					{
+						"name": "Convert_files",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ForEachFile",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[STAGE].[p_convert_fixed_length]",
+							"storedProcedureParameters": {
+								"filetype": {
+									"value": {
+										"value": "@pipeline().parameters.SourceStore_Directory",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "Recon",
+							"type": "LinkedServiceReference"
+						}
 					}
 				],
 				"concurrency": 1,
@@ -1034,6 +1070,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/BinaryDataSource_Folder')]",
+				"[concat(variables('factoryId'), '/linkedServices/Recon')]",
 				"[concat(variables('factoryId'), '/datasets/BinaryDataSource_File')]",
 				"[concat(variables('factoryId'), '/datasets/BinaryDataDestination')]",
 				"[concat(variables('factoryId'), '/linkedServices/azure_recon')]",
@@ -1689,7 +1726,7 @@
 					"frequency": "Minute",
 					"interval": 15,
 					"startTime": "2025-09-22T05:55:00Z",
-					"endTime": "2025-09-23T05:55:00Z",
+					"endTime": "2025-09-30T05:55:00Z",
 					"delay": "00:00:30",
 					"maxConcurrency": 1,
 					"retryPolicy": {
@@ -1702,27 +1739,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/fixed_file_loader')]"
 			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/triggerANICO')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipelines": [],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Minute",
-						"interval": 15,
-						"startTime": "2025-09-23T02:36:00",
-						"endTime": "2025-09-24T02:36:00",
-						"timeZone": "Eastern Standard Time"
-					}
-				}
-			},
-			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/triggerANICO2')]",
@@ -1801,27 +1817,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/fixed_file_loader')]"
 			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/triggerAllState')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipelines": [],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Minute",
-						"interval": 15,
-						"startTime": "2025-09-23T02:35:00",
-						"endTime": "2025-09-24T02:35:00",
-						"timeZone": "Eastern Standard Time"
-					}
-				}
-			},
-			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/triggerAllstate2')]",

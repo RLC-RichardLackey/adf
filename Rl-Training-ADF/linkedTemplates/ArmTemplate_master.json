@@ -111,6 +111,26 @@
 			"type": "string",
 			"defaultValue": "BILL"
 		},
+		"triggerBank_properties_pipeline_parameters_SourceStore_Location": {
+			"type": "string",
+			"defaultValue": "source"
+		},
+		"triggerBank_properties_pipeline_parameters_SourceStore_Directory": {
+			"type": "string",
+			"defaultValue": "testbankfiles"
+		},
+		"triggerBank_properties_pipeline_parameters_DestinationStore_Location": {
+			"type": "string",
+			"defaultValue": "source"
+		},
+		"triggerBank_properties_pipeline_parameters_DestinationStore_Directory": {
+			"type": "string",
+			"defaultValue": "testbankfiles/archive"
+		},
+		"triggerBank_properties_pipeline_parameters_FileType": {
+			"type": "string",
+			"defaultValue": "PAY"
+		},
 		"triggerTransam_properties_pipeline_parameters_SourceStore_Location": {
 			"type": "string",
 			"defaultValue": "source"
@@ -210,6 +230,21 @@
 					},
 					"azure_recon_properties_typeProperties_userName": {
 						"value": "[parameters('azure_recon_properties_typeProperties_userName')]"
+					},
+					"triggerANICO2_properties_pipeline_parameters_SourceStore_Location": {
+						"value": "[parameters('triggerANICO2_properties_pipeline_parameters_SourceStore_Location')]"
+					},
+					"triggerANICO2_properties_pipeline_parameters_SourceStore_Directory": {
+						"value": "[parameters('triggerANICO2_properties_pipeline_parameters_SourceStore_Directory')]"
+					},
+					"triggerANICO2_properties_pipeline_parameters_DestinationStore_Location": {
+						"value": "[parameters('triggerANICO2_properties_pipeline_parameters_DestinationStore_Location')]"
+					},
+					"triggerANICO2_properties_pipeline_parameters_DestinationStore_Directory": {
+						"value": "[parameters('triggerANICO2_properties_pipeline_parameters_DestinationStore_Directory')]"
+					},
+					"triggerANICO2_properties_pipeline_parameters_FileType": {
+						"value": "[parameters('triggerANICO2_properties_pipeline_parameters_FileType')]"
 					}
 				}
 			},
@@ -228,21 +263,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"triggerANICO2_properties_pipeline_parameters_SourceStore_Location": {
-						"value": "[parameters('triggerANICO2_properties_pipeline_parameters_SourceStore_Location')]"
-					},
-					"triggerANICO2_properties_pipeline_parameters_SourceStore_Directory": {
-						"value": "[parameters('triggerANICO2_properties_pipeline_parameters_SourceStore_Directory')]"
-					},
-					"triggerANICO2_properties_pipeline_parameters_DestinationStore_Location": {
-						"value": "[parameters('triggerANICO2_properties_pipeline_parameters_DestinationStore_Location')]"
-					},
-					"triggerANICO2_properties_pipeline_parameters_DestinationStore_Directory": {
-						"value": "[parameters('triggerANICO2_properties_pipeline_parameters_DestinationStore_Directory')]"
-					},
-					"triggerANICO2_properties_pipeline_parameters_FileType": {
-						"value": "[parameters('triggerANICO2_properties_pipeline_parameters_FileType')]"
 					},
 					"triggerAflac_properties_pipeline_parameters_SourceStore_Location": {
 						"value": "[parameters('triggerAflac_properties_pipeline_parameters_SourceStore_Location')]"
@@ -273,6 +293,21 @@
 					},
 					"triggerAllstate2_properties_pipeline_parameters_FileType": {
 						"value": "[parameters('triggerAllstate2_properties_pipeline_parameters_FileType')]"
+					},
+					"triggerBank_properties_pipeline_parameters_SourceStore_Location": {
+						"value": "[parameters('triggerBank_properties_pipeline_parameters_SourceStore_Location')]"
+					},
+					"triggerBank_properties_pipeline_parameters_SourceStore_Directory": {
+						"value": "[parameters('triggerBank_properties_pipeline_parameters_SourceStore_Directory')]"
+					},
+					"triggerBank_properties_pipeline_parameters_DestinationStore_Location": {
+						"value": "[parameters('triggerBank_properties_pipeline_parameters_DestinationStore_Location')]"
+					},
+					"triggerBank_properties_pipeline_parameters_DestinationStore_Directory": {
+						"value": "[parameters('triggerBank_properties_pipeline_parameters_DestinationStore_Directory')]"
+					},
+					"triggerBank_properties_pipeline_parameters_FileType": {
+						"value": "[parameters('triggerBank_properties_pipeline_parameters_FileType')]"
 					},
 					"triggerTransam_properties_pipeline_parameters_SourceStore_Location": {
 						"value": "[parameters('triggerTransam_properties_pipeline_parameters_SourceStore_Location')]"

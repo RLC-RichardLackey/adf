@@ -83,6 +83,21 @@
 		"triggerAllstate2_properties_pipeline_parameters_FileType": {
 			"value": "BILL"
 		},
+		"triggerBank_properties_pipeline_parameters_SourceStore_Location": {
+			"value": "source"
+		},
+		"triggerBank_properties_pipeline_parameters_SourceStore_Directory": {
+			"value": "testbankfiles"
+		},
+		"triggerBank_properties_pipeline_parameters_DestinationStore_Location": {
+			"value": "source"
+		},
+		"triggerBank_properties_pipeline_parameters_DestinationStore_Directory": {
+			"value": "testbankfiles/archive"
+		},
+		"triggerBank_properties_pipeline_parameters_FileType": {
+			"value": "PAY"
+		},
 		"triggerTransam_properties_pipeline_parameters_SourceStore_Location": {
 			"value": "source"
 		},

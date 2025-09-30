@@ -3,19 +3,6 @@
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Started",
-		"pipeline": {
-			"pipelineReference": {
-				"referenceName": "fixed_file_loader",
-				"type": "PipelineReference"
-			},
-			"parameters": {
-				"SourceStore_Location": "source",
-				"SourceStore_Directory": "testbankfiles",
-				"DestinationStore_Location": "source",
-				"DestinationStore_Directory": "testbankfiles/archive",
-				"FileType": "PAY"
-			}
-		},
 		"type": "TumblingWindowTrigger",
 		"typeProperties": {
 			"frequency": "Minute",

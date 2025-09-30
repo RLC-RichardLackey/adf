@@ -51,26 +51,6 @@
 			"type": "string",
 			"defaultValue": "https://sqlserverstor.blob.core.windows.net/"
 		},
-		"trigger1_properties_pipeline_parameters_SourceStore_Location": {
-			"type": "string",
-			"defaultValue": "source"
-		},
-		"trigger1_properties_pipeline_parameters_SourceStore_Directory": {
-			"type": "string",
-			"defaultValue": "testbankfiles"
-		},
-		"trigger1_properties_pipeline_parameters_DestinationStore_Location": {
-			"type": "string",
-			"defaultValue": "source"
-		},
-		"trigger1_properties_pipeline_parameters_DestinationStore_Directory": {
-			"type": "string",
-			"defaultValue": "testbankfiles/archive"
-		},
-		"trigger1_properties_pipeline_parameters_FileType": {
-			"type": "string",
-			"defaultValue": "PAY"
-		},
 		"triggerANICO2_properties_pipeline_parameters_SourceStore_Location": {
 			"type": "string",
 			"defaultValue": "source"
@@ -230,21 +210,6 @@
 					},
 					"azure_recon_properties_typeProperties_userName": {
 						"value": "[parameters('azure_recon_properties_typeProperties_userName')]"
-					},
-					"trigger1_properties_pipeline_parameters_SourceStore_Location": {
-						"value": "[parameters('trigger1_properties_pipeline_parameters_SourceStore_Location')]"
-					},
-					"trigger1_properties_pipeline_parameters_SourceStore_Directory": {
-						"value": "[parameters('trigger1_properties_pipeline_parameters_SourceStore_Directory')]"
-					},
-					"trigger1_properties_pipeline_parameters_DestinationStore_Location": {
-						"value": "[parameters('trigger1_properties_pipeline_parameters_DestinationStore_Location')]"
-					},
-					"trigger1_properties_pipeline_parameters_DestinationStore_Directory": {
-						"value": "[parameters('trigger1_properties_pipeline_parameters_DestinationStore_Directory')]"
-					},
-					"trigger1_properties_pipeline_parameters_FileType": {
-						"value": "[parameters('trigger1_properties_pipeline_parameters_FileType')]"
 					}
 				}
 			},

@@ -50,26 +50,6 @@
 		"azure_recon_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "ralackey305"
-		},
-		"trigger1_properties_pipeline_parameters_SourceStore_Location": {
-			"type": "string",
-			"defaultValue": "source"
-		},
-		"trigger1_properties_pipeline_parameters_SourceStore_Directory": {
-			"type": "string",
-			"defaultValue": "testbankfiles"
-		},
-		"trigger1_properties_pipeline_parameters_DestinationStore_Location": {
-			"type": "string",
-			"defaultValue": "source"
-		},
-		"trigger1_properties_pipeline_parameters_DestinationStore_Directory": {
-			"type": "string",
-			"defaultValue": "testbankfiles/archive"
-		},
-		"trigger1_properties_pipeline_parameters_FileType": {
-			"type": "string",
-			"defaultValue": "PAY"
 		}
 	},
 	"variables": {
@@ -142,6 +122,29 @@
 				"typeProperties": {
 					"serviceEndpoint": "[parameters('linkedService1_properties_typeProperties_serviceEndpoint')]",
 					"accountKind": "StorageV2"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/trigger1')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"type": "TumblingWindowTrigger",
+				"typeProperties": {
+					"frequency": "Minute",
+					"interval": 15,
+					"startTime": "2025-09-22T05:55:00Z",
+					"delay": "00:00:30",
+					"maxConcurrency": 1,
+					"retryPolicy": {
+						"count": 3,
+						"intervalInSeconds": 30
+					},
+					"dependsOn": []
 				}
 			},
 			"dependsOn": []
@@ -1867,45 +1870,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/inputBankFile')]",
 				"[concat(variables('factoryId'), '/datasets/stage_blob_bankfile')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/trigger1')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipeline": {
-					"pipelineReference": {
-						"referenceName": "fixed_file_loader",
-						"type": "PipelineReference"
-					},
-					"parameters": {
-						"SourceStore_Location": "[parameters('trigger1_properties_pipeline_parameters_SourceStore_Location')]",
-						"SourceStore_Directory": "[parameters('trigger1_properties_pipeline_parameters_SourceStore_Directory')]",
-						"DestinationStore_Location": "[parameters('trigger1_properties_pipeline_parameters_DestinationStore_Location')]",
-						"DestinationStore_Directory": "[parameters('trigger1_properties_pipeline_parameters_DestinationStore_Directory')]",
-						"FileType": "[parameters('trigger1_properties_pipeline_parameters_FileType')]"
-					}
-				},
-				"type": "TumblingWindowTrigger",
-				"typeProperties": {
-					"frequency": "Minute",
-					"interval": 15,
-					"startTime": "2025-09-22T05:55:00Z",
-					"endTime": "2025-09-30T05:55:00Z",
-					"delay": "00:00:30",
-					"maxConcurrency": 1,
-					"retryPolicy": {
-						"count": 3,
-						"intervalInSeconds": 30
-					},
-					"dependsOn": []
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/fixed_file_loader')]"
 			]
 		}
 	]

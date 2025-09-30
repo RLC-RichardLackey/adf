@@ -38,21 +38,6 @@
 		"linkedService1_properties_typeProperties_serviceEndpoint": {
 			"value": "https://sqlserverstor.blob.core.windows.net/"
 		},
-		"trigger1_properties_pipeline_parameters_SourceStore_Location": {
-			"value": "source"
-		},
-		"trigger1_properties_pipeline_parameters_SourceStore_Directory": {
-			"value": "testbankfiles"
-		},
-		"trigger1_properties_pipeline_parameters_DestinationStore_Location": {
-			"value": "source"
-		},
-		"trigger1_properties_pipeline_parameters_DestinationStore_Directory": {
-			"value": "testbankfiles/archive"
-		},
-		"trigger1_properties_pipeline_parameters_FileType": {
-			"value": "PAY"
-		},
 		"triggerANICO2_properties_pipeline_parameters_SourceStore_Location": {
 			"value": "source"
 		},

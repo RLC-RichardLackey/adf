@@ -51,26 +51,6 @@
 			"type": "string",
 			"defaultValue": "https://sqlserverstor.blob.core.windows.net/"
 		},
-		"trigger1_properties_pipeline_parameters_SourceStore_Location": {
-			"type": "string",
-			"defaultValue": "source"
-		},
-		"trigger1_properties_pipeline_parameters_SourceStore_Directory": {
-			"type": "string",
-			"defaultValue": "testbankfiles"
-		},
-		"trigger1_properties_pipeline_parameters_DestinationStore_Location": {
-			"type": "string",
-			"defaultValue": "source"
-		},
-		"trigger1_properties_pipeline_parameters_DestinationStore_Directory": {
-			"type": "string",
-			"defaultValue": "testbankfiles/archive"
-		},
-		"trigger1_properties_pipeline_parameters_FileType": {
-			"type": "string",
-			"defaultValue": "PAY"
-		},
 		"triggerANICO2_properties_pipeline_parameters_SourceStore_Location": {
 			"type": "string",
 			"defaultValue": "source"
@@ -1708,25 +1688,11 @@
 			"properties": {
 				"annotations": [],
 				"runtimeState": "Stopped",
-				"pipeline": {
-					"pipelineReference": {
-						"referenceName": "fixed_file_loader",
-						"type": "PipelineReference"
-					},
-					"parameters": {
-						"SourceStore_Location": "[parameters('trigger1_properties_pipeline_parameters_SourceStore_Location')]",
-						"SourceStore_Directory": "[parameters('trigger1_properties_pipeline_parameters_SourceStore_Directory')]",
-						"DestinationStore_Location": "[parameters('trigger1_properties_pipeline_parameters_DestinationStore_Location')]",
-						"DestinationStore_Directory": "[parameters('trigger1_properties_pipeline_parameters_DestinationStore_Directory')]",
-						"FileType": "[parameters('trigger1_properties_pipeline_parameters_FileType')]"
-					}
-				},
 				"type": "TumblingWindowTrigger",
 				"typeProperties": {
 					"frequency": "Minute",
 					"interval": 15,
 					"startTime": "2025-09-22T05:55:00Z",
-					"endTime": "2025-09-30T05:55:00Z",
 					"delay": "00:00:30",
 					"maxConcurrency": 1,
 					"retryPolicy": {
@@ -1736,9 +1702,7 @@
 					"dependsOn": []
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/fixed_file_loader')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/triggerANICO2')]",
@@ -1746,7 +1710,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Started",
+				"runtimeState": "Stopped",
 				"pipeline": {
 					"pipelineReference": {
 						"referenceName": "fixed_file_loader",
@@ -1785,7 +1749,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Started",
+				"runtimeState": "Stopped",
 				"pipeline": {
 					"pipelineReference": {
 						"referenceName": "fixed_file_loader",
@@ -1824,7 +1788,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Started",
+				"runtimeState": "Stopped",
 				"pipeline": {
 					"pipelineReference": {
 						"referenceName": "fixed_file_loader",
@@ -1863,7 +1827,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Started",
+				"runtimeState": "Stopped",
 				"pipeline": {
 					"pipelineReference": {
 						"referenceName": "fixed_file_loader",
@@ -1901,7 +1865,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Started",
+				"runtimeState": "Stopped",
 				"pipeline": {
 					"pipelineReference": {
 						"referenceName": "fixed_file_loader",

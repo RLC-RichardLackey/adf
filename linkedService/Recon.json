@@ -5,7 +5,7 @@
 		"type": "SqlServer",
 		"typeProperties": {
 			"server": "rltraining.database.windows.net",
-			"database": "recon",
+			"database": "recon6",
 			"encrypt": "mandatory",
 			"trustServerCertificate": false,
 			"authenticationType": "SQL",

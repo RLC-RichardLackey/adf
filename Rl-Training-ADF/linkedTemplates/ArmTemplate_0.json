@@ -33,7 +33,7 @@
 		},
 		"Recon_properties_typeProperties_database": {
 			"type": "string",
-			"defaultValue": "recon"
+			"defaultValue": "recon6"
 		},
 		"Recon_properties_typeProperties_userName": {
 			"type": "string",
@@ -45,7 +45,7 @@
 		},
 		"azure_recon_properties_typeProperties_database": {
 			"type": "string",
-			"defaultValue": "Recon"
+			"defaultValue": "Recon6"
 		},
 		"azure_recon_properties_typeProperties_userName": {
 			"type": "string",

@@ -15,7 +15,7 @@
 			"value": "rltraining.database.windows.net"
 		},
 		"Recon_properties_typeProperties_database": {
-			"value": "recon"
+			"value": "recon6"
 		},
 		"Recon_properties_typeProperties_userName": {
 			"value": "ralackey305"
@@ -27,7 +27,7 @@
 			"value": "rltraining.database.windows.net"
 		},
 		"azure_recon_properties_typeProperties_database": {
-			"value": "Recon"
+			"value": "Recon6"
 		},
 		"azure_recon_properties_typeProperties_userName": {
 			"value": "ralackey305"

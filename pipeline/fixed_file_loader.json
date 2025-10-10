@@ -582,7 +582,7 @@
 			},
 			"SourceStore_Directory": {
 				"type": "string",
-				"defaultValue": "Transam"
+				"defaultValue": "Allstate"
 			},
 			"DestinationStore_Location": {
 				"type": "string",
@@ -590,7 +590,7 @@
 			},
 			"DestinationStore_Directory": {
 				"type": "string",
-				"defaultValue": "Transam/archive"
+				"defaultValue": "Allstate/archive"
 			},
 			"FileType": {
 				"type": "string",

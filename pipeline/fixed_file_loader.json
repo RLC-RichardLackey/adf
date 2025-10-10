@@ -582,7 +582,7 @@
 			},
 			"SourceStore_Directory": {
 				"type": "string",
-				"defaultValue": "testbankfiles"
+				"defaultValue": "Transam"
 			},
 			"DestinationStore_Location": {
 				"type": "string",
@@ -590,10 +590,11 @@
 			},
 			"DestinationStore_Directory": {
 				"type": "string",
-				"defaultValue": "testbankfiles/archive"
+				"defaultValue": "Transam/archive"
 			},
 			"FileType": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "Bill"
 			}
 		},
 		"variables": {

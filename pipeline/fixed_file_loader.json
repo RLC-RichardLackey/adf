@@ -582,7 +582,7 @@
 			},
 			"SourceStore_Directory": {
 				"type": "string",
-				"defaultValue": "Allstate"
+				"defaultValue": "ANICO"
 			},
 			"DestinationStore_Location": {
 				"type": "string",
@@ -590,11 +590,11 @@
 			},
 			"DestinationStore_Directory": {
 				"type": "string",
-				"defaultValue": "Allstate/archive"
+				"defaultValue": "Anico/archive"
 			},
 			"FileType": {
 				"type": "string",
-				"defaultValue": "Bill"
+				"defaultValue": "ANICO"
 			}
 		},
 		"variables": {

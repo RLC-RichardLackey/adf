@@ -1,0 +1,16 @@
+{
+	"name": "export_last_anico_response_formatted",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "azure_recon",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "Export",
+			"table": "AniCo_Response"
+		}
+	}
+}

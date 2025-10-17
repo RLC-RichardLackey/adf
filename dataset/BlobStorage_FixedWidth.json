@@ -28,7 +28,7 @@
 				},
 				"container": "source"
 			},
-			"columnDelimiter": "",
+			"columnDelimiter": "\u0001",
 			"escapeChar": "",
 			"firstRowAsHeader": false,
 			"quoteChar": ""

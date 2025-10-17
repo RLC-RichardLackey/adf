@@ -230,21 +230,6 @@
 					},
 					"azure_recon_properties_typeProperties_userName": {
 						"value": "[parameters('azure_recon_properties_typeProperties_userName')]"
-					},
-					"triggerANICO2_properties_pipeline_parameters_SourceStore_Location": {
-						"value": "[parameters('triggerANICO2_properties_pipeline_parameters_SourceStore_Location')]"
-					},
-					"triggerANICO2_properties_pipeline_parameters_SourceStore_Directory": {
-						"value": "[parameters('triggerANICO2_properties_pipeline_parameters_SourceStore_Directory')]"
-					},
-					"triggerANICO2_properties_pipeline_parameters_DestinationStore_Location": {
-						"value": "[parameters('triggerANICO2_properties_pipeline_parameters_DestinationStore_Location')]"
-					},
-					"triggerANICO2_properties_pipeline_parameters_DestinationStore_Directory": {
-						"value": "[parameters('triggerANICO2_properties_pipeline_parameters_DestinationStore_Directory')]"
-					},
-					"triggerANICO2_properties_pipeline_parameters_FileType": {
-						"value": "[parameters('triggerANICO2_properties_pipeline_parameters_FileType')]"
 					}
 				}
 			},
@@ -263,6 +248,21 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"triggerANICO2_properties_pipeline_parameters_SourceStore_Location": {
+						"value": "[parameters('triggerANICO2_properties_pipeline_parameters_SourceStore_Location')]"
+					},
+					"triggerANICO2_properties_pipeline_parameters_SourceStore_Directory": {
+						"value": "[parameters('triggerANICO2_properties_pipeline_parameters_SourceStore_Directory')]"
+					},
+					"triggerANICO2_properties_pipeline_parameters_DestinationStore_Location": {
+						"value": "[parameters('triggerANICO2_properties_pipeline_parameters_DestinationStore_Location')]"
+					},
+					"triggerANICO2_properties_pipeline_parameters_DestinationStore_Directory": {
+						"value": "[parameters('triggerANICO2_properties_pipeline_parameters_DestinationStore_Directory')]"
+					},
+					"triggerANICO2_properties_pipeline_parameters_FileType": {
+						"value": "[parameters('triggerANICO2_properties_pipeline_parameters_FileType')]"
 					},
 					"triggerAflac_properties_pipeline_parameters_SourceStore_Location": {
 						"value": "[parameters('triggerAflac_properties_pipeline_parameters_SourceStore_Location')]"

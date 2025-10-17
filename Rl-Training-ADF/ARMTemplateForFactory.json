@@ -457,6 +457,221 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/anico_response_file_export')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy_Formatted_Anico_Data_to_File",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Set Filename",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 2,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": "[[Export].[p_Get_Last_AnicoReponse_Formatted]",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "FixedWidthRecord",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"type": "String",
+											"physicalType": "String",
+											"ordinal": 1
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "export_last_anico_response_formatted",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "BlobStorage_FixedWidth",
+								"type": "DatasetReference",
+								"parameters": {
+									"FileName": {
+										"value": "@variables('Filename')",
+										"type": "Expression"
+									},
+									"FolderPath": {
+										"value": "@pipeline().parameters.OutputFolder",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Archive_Success_File",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Copy_Formatted_Anico_Data_to_File",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": false,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "BlobStorage_FixedWidth",
+								"type": "DatasetReference",
+								"parameters": {
+									"FileName": {
+										"value": "@variables('Filename')",
+										"type": "Expression"
+									},
+									"FolderPath": {
+										"value": "@pipeline().parameters.OutputFolder",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "BlobStorage_FixedWidth",
+								"type": "DatasetReference",
+								"parameters": {
+									"FileName": {
+										"value": "@variables('Filename')",
+										"type": "Expression"
+									},
+									"FolderPath": "Anico/archive"
+								}
+							}
+						]
+					},
+					{
+						"name": "Set Filename",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "Filename",
+							"value": {
+								"value": "@concat('ANICO_RECONCILIATION_', formatDateTime(utcnow(), 'MMddyyyy'), '.txt')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"OutputFolder": {
+						"type": "string",
+						"defaultValue": "Anico/out"
+					},
+					"ArchiveFolder": {
+						"type": "string",
+						"defaultValue": "Anico/archive"
+					}
+				},
+				"variables": {
+					"Filename": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-10-16T12:00:00Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/export_last_anico_response_formatted')]",
+				"[concat(variables('factoryId'), '/datasets/BlobStorage_FixedWidth')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/fixed_file_loader')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1046,7 +1261,7 @@
 					},
 					"SourceStore_Directory": {
 						"type": "string",
-						"defaultValue": "testbankfiles"
+						"defaultValue": "ANICO"
 					},
 					"DestinationStore_Location": {
 						"type": "string",
@@ -1054,10 +1269,11 @@
 					},
 					"DestinationStore_Directory": {
 						"type": "string",
-						"defaultValue": "testbankfiles/archive"
+						"defaultValue": "Anico/archive"
 					},
 					"FileType": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "ANICO"
 					}
 				},
 				"variables": {
@@ -1208,6 +1424,70 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/Source')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BlobStorage_FixedWidth')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Source",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"FileName": {
+						"type": "string"
+					},
+					"FolderPath": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().FileName",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().FolderPath",
+							"type": "Expression"
+						},
+						"container": "source"
+					},
+					"columnDelimiter": "\u0001",
+					"escapeChar": "",
+					"firstRowAsHeader": false,
+					"quoteChar": ""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Source')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/export_last_anico_response_formatted')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "azure_recon",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "Export",
+					"table": "AniCo_Response"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/azure_recon')]"
 			]
 		},
 		{

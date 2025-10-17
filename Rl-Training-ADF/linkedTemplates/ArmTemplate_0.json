@@ -50,26 +50,6 @@
 		"azure_recon_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "ralackey305"
-		},
-		"triggerANICO2_properties_pipeline_parameters_SourceStore_Location": {
-			"type": "string",
-			"defaultValue": "source"
-		},
-		"triggerANICO2_properties_pipeline_parameters_SourceStore_Directory": {
-			"type": "string",
-			"defaultValue": "ANICO"
-		},
-		"triggerANICO2_properties_pipeline_parameters_DestinationStore_Location": {
-			"type": "string",
-			"defaultValue": "source"
-		},
-		"triggerANICO2_properties_pipeline_parameters_DestinationStore_Directory": {
-			"type": "string",
-			"defaultValue": "ANICO/archive"
-		},
-		"triggerANICO2_properties_pipeline_parameters_FileType": {
-			"type": "string",
-			"defaultValue": "BILL"
 		}
 	},
 	"variables": {
@@ -272,6 +252,49 @@
 						}
 					}
 				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Source')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BlobStorage_FixedWidth')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Source",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"FileName": {
+						"type": "string"
+					},
+					"FolderPath": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().FileName",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().FolderPath",
+							"type": "Expression"
+						},
+						"container": "source"
+					},
+					"columnDelimiter": "\u0001",
+					"escapeChar": "",
+					"firstRowAsHeader": false,
+					"quoteChar": ""
+				},
+				"schema": []
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/Source')]"
@@ -738,6 +761,27 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/export_last_anico_response_formatted')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "azure_recon",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "Export",
+					"table": "AniCo_Response"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/azure_recon')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/stage_FixedFileLines')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -976,6 +1020,221 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/azure_recon')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/anico_response_file_export')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy_Formatted_Anico_Data_to_File",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Set Filename",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 2,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": "[[Export].[p_Get_Last_AnicoReponse_Formatted]",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "FixedWidthRecord",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"type": "String",
+											"physicalType": "String",
+											"ordinal": 1
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "export_last_anico_response_formatted",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "BlobStorage_FixedWidth",
+								"type": "DatasetReference",
+								"parameters": {
+									"FileName": {
+										"value": "@variables('Filename')",
+										"type": "Expression"
+									},
+									"FolderPath": {
+										"value": "@pipeline().parameters.OutputFolder",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Archive_Success_File",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Copy_Formatted_Anico_Data_to_File",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": false,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "BlobStorage_FixedWidth",
+								"type": "DatasetReference",
+								"parameters": {
+									"FileName": {
+										"value": "@variables('Filename')",
+										"type": "Expression"
+									},
+									"FolderPath": {
+										"value": "@pipeline().parameters.OutputFolder",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "BlobStorage_FixedWidth",
+								"type": "DatasetReference",
+								"parameters": {
+									"FileName": {
+										"value": "@variables('Filename')",
+										"type": "Expression"
+									},
+									"FolderPath": "Anico/archive"
+								}
+							}
+						]
+					},
+					{
+						"name": "Set Filename",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "Filename",
+							"value": {
+								"value": "@concat('ANICO_RECONCILIATION_', formatDateTime(utcnow(), 'MMddyyyy'), '.txt')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"OutputFolder": {
+						"type": "string",
+						"defaultValue": "Anico/out"
+					},
+					"ArchiveFolder": {
+						"type": "string",
+						"defaultValue": "Anico/archive"
+					}
+				},
+				"variables": {
+					"Filename": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-10-16T12:00:00Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/export_last_anico_response_formatted')]",
+				"[concat(variables('factoryId'), '/datasets/BlobStorage_FixedWidth')]"
 			]
 		},
 		{
@@ -1568,7 +1827,7 @@
 					},
 					"SourceStore_Directory": {
 						"type": "string",
-						"defaultValue": "testbankfiles"
+						"defaultValue": "ANICO"
 					},
 					"DestinationStore_Location": {
 						"type": "string",
@@ -1576,10 +1835,11 @@
 					},
 					"DestinationStore_Directory": {
 						"type": "string",
-						"defaultValue": "testbankfiles/archive"
+						"defaultValue": "Anico/archive"
 					},
 					"FileType": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "ANICO"
 					}
 				},
 				"variables": {
@@ -1599,313 +1859,6 @@
 				"[concat(variables('factoryId'), '/datasets/input_FixedLength4000')]",
 				"[concat(variables('factoryId'), '/linkedServices/Source')]",
 				"[concat(variables('factoryId'), '/datasets/stage_FixedFileLines')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_bankloader')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "inputBankFile",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "stage_blob_bankfile",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "derivedColumn1"
-						},
-						{
-							"name": "select1"
-						},
-						{
-							"name": "filter1"
-						}
-					],
-					"scriptLines": [
-						"parameters{",
-						"     p_filemaster_id as integer (0),",
-						"     p_container as string,",
-						"     p_directory as string,",
-						"     p_filename as string",
-						"}",
-						"source(output(",
-						"          Column_1 as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> source1",
-						"source1 derive(fmid = $p_filemaster_id,",
-						"          RecordTypeCode = substring(Column_1,1,1),",
-						"          TransactionCode = substring(Column_1,2,2),",
-						"          ReceivingDFIIdentification = ltrim(substring(Column_1, 4, 8)),",
-						"          CheckDigit = ltrim(substring(Column_1, 12, 1)),",
-						"          DFIAccountNumber = ltrim(substring(Column_1, 13, 17)),",
-						"          Amount = ltrim(substring(Column_1, 30, 10)),",
-						"          IdentificationNumber = ltrim(substring(Column_1, 40, 15)),",
-						"          Name = ltrim(substring(Column_1, 55, 22)),",
-						"          DiscretionaryDataPaymentCode = ltrim(substring(Column_1, 77, 2)),",
-						"          AddendaRecordIndicator = ltrim(substring(Column_1, 79, 1)),",
-						"          TraceNumber = ltrim(substring(Column_1, 80, 15)),",
-						"          company_date = iif(left(Column_1,1)==\"5\", ltrim(substring(Column_1,64,6)),\"\"),",
-						"          effective_date = iif(left(Column_1,1)==\"5\", ltrim(substring(Column_1,70,6)),\"\")) ~> derivedColumn1",
-						"filter1 select(mapColumn(",
-						"          Column_1,",
-						"          fmid,",
-						"          RecordTypeCode,",
-						"          TransactionCode,",
-						"          ReceivingDFIIdentification,",
-						"          CheckDigit,",
-						"          DFIAccountNumber,",
-						"          Amount,",
-						"          IdentificationNumber,",
-						"          Name,",
-						"          DiscretionaryDataPaymentCode,",
-						"          AddendaRecordIndicator,",
-						"          TraceNumber,",
-						"          company_date,",
-						"          effective_date",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> select1",
-						"derivedColumn1 filter(RecordTypeCode == \"1\" || RecordTypeCode == \"5\" || RecordTypeCode == \"6\") ~> filter1",
-						"select1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          id as long,",
-						"          raw_filemaster_id as long,",
-						"          datarow as string,",
-						"          Record_Type_Code as string,",
-						"          Transaction_Code as string,",
-						"          Receiving_DFI_Identification as string,",
-						"          Check_Digit as string,",
-						"          DFI_Account_Number as string,",
-						"          Amount as string,",
-						"          Identification_Number as string,",
-						"          Name as string,",
-						"          Discretionary_Data_Payment_Code as string,",
-						"          Addenda_Record_Indicator as string,",
-						"          Trace_Number as string,",
-						"          Company_Descriptive_Date as string,",
-						"          Effective_Date as string",
-						"     ),",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     format: 'table',",
-						"     errorHandlingOption: 'stopOnFirstError',",
-						"     mapColumn(",
-						"          raw_filemaster_id = fmid,",
-						"          datarow = Column_1,",
-						"          Record_Type_Code = RecordTypeCode,",
-						"          Transaction_Code = TransactionCode,",
-						"          Receiving_DFI_Identification = ReceivingDFIIdentification,",
-						"          Check_Digit = CheckDigit,",
-						"          DFI_Account_Number = DFIAccountNumber,",
-						"          Amount,",
-						"          Identification_Number = IdentificationNumber,",
-						"          Name,",
-						"          Discretionary_Data_Payment_Code = DiscretionaryDataPaymentCode,",
-						"          Addenda_Record_Indicator = AddendaRecordIndicator,",
-						"          Trace_Number = TraceNumber,",
-						"          Company_Descriptive_Date = company_date,",
-						"          Effective_Date = effective_date",
-						"     )) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/inputBankFile')]",
-				"[concat(variables('factoryId'), '/datasets/stage_blob_bankfile')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_parse_bank_nacha_file')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "inputBankFile",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "stage_blob_bankfile",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "derivedColumn1"
-						},
-						{
-							"name": "select1"
-						},
-						{
-							"name": "filter1"
-						}
-					],
-					"scriptLines": [
-						"parameters{",
-						"     p_filemaster_id as integer (0),",
-						"     p_container as string,",
-						"     p_directory as string,",
-						"     p_filename as string",
-						"}",
-						"source(output(",
-						"          Column_1 as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> source1",
-						"source1 derive(fmid = $p_filemaster_id,",
-						"          RecordTypeCode = substring(Column_1,1,1),",
-						"          TransactionCode = substring(Column_1,2,2),",
-						"          ReceivingDFIIdentification = ltrim(substring(Column_1, 4, 8)),",
-						"          CheckDigit = ltrim(substring(Column_1, 12, 1)),",
-						"          DFIAccountNumber = ltrim(substring(Column_1, 13, 17)),",
-						"          Amount = ltrim(substring(Column_1, 30, 10)),",
-						"          IdentificationNumber = ltrim(substring(Column_1, 40, 15)),",
-						"          Name = ltrim(substring(Column_1, 55, 22)),",
-						"          DiscretionaryDataPaymentCode = ltrim(substring(Column_1, 77, 2)),",
-						"          AddendaRecordIndicator = ltrim(substring(Column_1, 79, 1)),",
-						"          TraceNumber = ltrim(substring(Column_1, 80, 15)),",
-						"          company_date = iif(left(Column_1,1)==\"5\", ltrim(substring(Column_1,64,6)),\"\"),",
-						"          effective_date = iif(left(Column_1,1)==\"5\", ltrim(substring(Column_1,70,6)),\"\")) ~> derivedColumn1",
-						"filter1 select(mapColumn(",
-						"          Column_1,",
-						"          fmid,",
-						"          RecordTypeCode,",
-						"          TransactionCode,",
-						"          ReceivingDFIIdentification,",
-						"          CheckDigit,",
-						"          DFIAccountNumber,",
-						"          Amount,",
-						"          IdentificationNumber,",
-						"          Name,",
-						"          DiscretionaryDataPaymentCode,",
-						"          AddendaRecordIndicator,",
-						"          TraceNumber,",
-						"          company_date,",
-						"          effective_date",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> select1",
-						"derivedColumn1 filter(RecordTypeCode == \"1\" || RecordTypeCode == \"5\" || RecordTypeCode == \"6\") ~> filter1",
-						"select1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          id as long,",
-						"          raw_filemaster_id as long,",
-						"          datarow as string,",
-						"          Record_Type_Code as string,",
-						"          Transaction_Code as string,",
-						"          Receiving_DFI_Identification as string,",
-						"          Check_Digit as string,",
-						"          DFI_Account_Number as string,",
-						"          Amount as string,",
-						"          Identification_Number as string,",
-						"          Name as string,",
-						"          Discretionary_Data_Payment_Code as string,",
-						"          Addenda_Record_Indicator as string,",
-						"          Trace_Number as string,",
-						"          Company_Descriptive_Date as string,",
-						"          Effective_Date as string",
-						"     ),",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     format: 'table',",
-						"     errorHandlingOption: 'stopOnFirstError',",
-						"     mapColumn(",
-						"          raw_filemaster_id = fmid,",
-						"          datarow = Column_1,",
-						"          Record_Type_Code = RecordTypeCode,",
-						"          Transaction_Code = TransactionCode,",
-						"          Receiving_DFI_Identification = ReceivingDFIIdentification,",
-						"          Check_Digit = CheckDigit,",
-						"          DFI_Account_Number = DFIAccountNumber,",
-						"          Amount,",
-						"          Identification_Number = IdentificationNumber,",
-						"          Name,",
-						"          Discretionary_Data_Payment_Code = DiscretionaryDataPaymentCode,",
-						"          Addenda_Record_Indicator = AddendaRecordIndicator,",
-						"          Trace_Number = TraceNumber,",
-						"          Company_Descriptive_Date = company_date,",
-						"          Effective_Date = effective_date",
-						"     )) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/inputBankFile')]",
-				"[concat(variables('factoryId'), '/datasets/stage_blob_bankfile')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/triggerANICO2')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipeline": {
-					"pipelineReference": {
-						"referenceName": "fixed_file_loader",
-						"type": "PipelineReference"
-					},
-					"parameters": {
-						"SourceStore_Location": "[parameters('triggerANICO2_properties_pipeline_parameters_SourceStore_Location')]",
-						"SourceStore_Directory": "[parameters('triggerANICO2_properties_pipeline_parameters_SourceStore_Directory')]",
-						"DestinationStore_Location": "[parameters('triggerANICO2_properties_pipeline_parameters_DestinationStore_Location')]",
-						"DestinationStore_Directory": "[parameters('triggerANICO2_properties_pipeline_parameters_DestinationStore_Directory')]",
-						"FileType": "[parameters('triggerANICO2_properties_pipeline_parameters_FileType')]"
-					}
-				},
-				"type": "TumblingWindowTrigger",
-				"typeProperties": {
-					"frequency": "Minute",
-					"interval": 15,
-					"startTime": "2025-09-23T02:44:00Z",
-					"endTime": "2025-09-24T02:44:00Z",
-					"delay": "00:00:00",
-					"maxConcurrency": 1,
-					"retryPolicy": {
-						"count": 2,
-						"intervalInSeconds": 30
-					},
-					"dependsOn": []
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/fixed_file_loader')]"
 			]
 		}
 	]

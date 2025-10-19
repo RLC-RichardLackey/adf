@@ -1185,6 +1185,30 @@
 											}
 										]
 									}
+								},
+								{
+									"name": "Set Filecount",
+									"type": "SetVariable",
+									"dependsOn": [
+										{
+											"activity": "Delete1",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "filecount",
+										"value": {
+											"value": "@item().currentIteration",
+											"type": "Expression"
+										}
+									}
 								}
 							]
 						}
@@ -1214,8 +1238,8 @@
 						}
 					},
 					{
-						"name": "Convert_files",
-						"type": "SqlServerStoredProcedure",
+						"name": "If filecount is greater than 0",
+						"type": "IfCondition",
 						"dependsOn": [
 							{
 								"activity": "ForEachFile",
@@ -1224,29 +1248,43 @@
 								]
 							}
 						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
 						"userProperties": [],
 						"typeProperties": {
-							"storedProcedureName": "[[STAGE].[p_convert_fixed_length]",
-							"storedProcedureParameters": {
-								"filetype": {
-									"value": {
-										"value": "@pipeline().parameters.SourceStore_Directory",
-										"type": "Expression"
+							"expression": {
+								"value": "@greater( variables('filecount') , 0)\n\n",
+								"type": "Expression"
+							},
+							"ifTrueActivities": [
+								{
+									"name": "Convert_files_copy1",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
 									},
-									"type": "String"
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "[[STAGE].[p_convert_fixed_length]",
+										"storedProcedureParameters": {
+											"filetype": {
+												"value": {
+													"value": "@pipeline().parameters.SourceStore_Directory",
+													"type": "Expression"
+												},
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "Recon",
+										"type": "LinkedServiceReference"
+									}
 								}
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "Recon",
-							"type": "LinkedServiceReference"
+							]
 						}
 					}
 				],
@@ -1273,24 +1311,28 @@
 					},
 					"FileType": {
 						"type": "string",
-						"defaultValue": "ANICO"
+						"defaultValue": "BILL"
 					}
 				},
 				"variables": {
 					"filemaster_id": {
 						"type": "Integer",
 						"defaultValue": -1
+					},
+					"filecount": {
+						"type": "Integer",
+						"defaultValue": 0
 					}
 				},
 				"annotations": []
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/BinaryDataSource_Folder')]",
-				"[concat(variables('factoryId'), '/linkedServices/Recon')]",
 				"[concat(variables('factoryId'), '/datasets/BinaryDataSource_File')]",
 				"[concat(variables('factoryId'), '/datasets/BinaryDataDestination')]",
 				"[concat(variables('factoryId'), '/linkedServices/azure_recon')]",
 				"[concat(variables('factoryId'), '/datasets/input_FixedLength4000')]",
+				"[concat(variables('factoryId'), '/linkedServices/Recon')]",
 				"[concat(variables('factoryId'), '/linkedServices/Source')]",
 				"[concat(variables('factoryId'), '/datasets/stage_FixedFileLines')]"
 			]

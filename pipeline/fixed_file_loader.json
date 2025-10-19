@@ -562,7 +562,7 @@
 				}
 			},
 			{
-				"name": "If Condition2",
+				"name": "If filecount is greater than 0",
 				"type": "IfCondition",
 				"dependsOn": [
 					{

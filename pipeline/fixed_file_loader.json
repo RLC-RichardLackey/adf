@@ -509,30 +509,6 @@
 									}
 								]
 							}
-						},
-						{
-							"name": "Set Filecount",
-							"type": "SetVariable",
-							"dependsOn": [
-								{
-									"activity": "Delete1",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "filecount",
-								"value": {
-									"value": "@item().currentIteration",
-									"type": "Expression"
-								}
-							}
 						}
 					]
 				}
@@ -575,7 +551,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@greater( variables('filecount') , 0)\n\n",
+						"value": "@greater( variables('filemaster_id') , 0)",
 						"type": "Expression"
 					},
 					"ifTrueActivities": [
@@ -639,10 +615,6 @@
 			"filemaster_id": {
 				"type": "Integer",
 				"defaultValue": -1
-			},
-			"filecount": {
-				"type": "Integer",
-				"defaultValue": 0
 			}
 		},
 		"annotations": []

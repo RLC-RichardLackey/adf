@@ -632,7 +632,7 @@
 			},
 			"FileType": {
 				"type": "string",
-				"defaultValue": "ANICO"
+				"defaultValue": "BILL"
 			}
 		},
 		"variables": {
